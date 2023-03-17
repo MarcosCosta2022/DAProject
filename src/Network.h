@@ -4,27 +4,38 @@
 
 #ifndef PROJECT_NETWORK_H
 #define PROJECT_NETWORK_H
+
 #include <string>
+
+using namespace std;
 
 class Network {
 
 public:
-    Network(std::string StationA, std::string StationB, std::string capacity, std::string service);
-
-    std::string getStationA();
-    std::string getStationB();
-    std::string getCapacity();
-    std::string getService();
-
-    std::string setStationA(std::string sA);
-    std::string setStationB(std::string sB);
-    std::string setCapacity(std::string C);
-    std::string setService(std::string S);
+    Network(std::string stationA, std::string stationB, std::string capacity, std::string service);
 private:
     std::string stationA;
+public:
+    const string &getStationA() const;
+
+    void setStationA(const string &stationA);
+
+    const string &getStationB() const;
+
+    void setStationB(const string &stationB);
+
+    const string &getCapacity() const;
+
+    void setCapacity(const string &capacity);
+
+    const string &getService() const;
+
+    void setService(const string &service);
+
+private:
     std::string stationB;
-    std::string Capacity;
-    std::string Service;
+    std::string capacity;
+    std::string service;
 };
 
 

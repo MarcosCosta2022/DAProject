@@ -5,50 +5,23 @@
 #include "Station.h"
 using namespace std;
 
-Station::Station(std::string C1, std::string C2, std::string C3, std::string C4, std::string C5) {
-    c1 = C1;
-    c2 = C2;
-    c3 = C3;
-    c4 = C4;
-    c5 = C5;
-}
+Station::Station(const string& name, const string& district,const string& municipality,
+                 const string& township, const string& line)
+                 :name(name),district(district),municipality(municipality),township(township),line(line)
+                 {}
 
-string Station::getC1() {
-    return c1;
-}
+Station::Station() = default;
 
-string Station::getC2() {
-    return c2;
-}
+string Station::getName() const {return name;}
+string Station::getDistrict() const {return district;}
+string Station::getMunicipality() const {return municipality;}
+string Station::getTownship() const {return township;}
+string Station::getLine() const {return line;}
 
-string Station::getC3() {
-    return c3;
-}
+void Station::setName(const string &name) {this->name = name;}
+void Station::setDistrict(const string &district) {this->district = district;}
+void Station::setMunicipality(const string &municipality) {this->municipality = municipality;}
+void Station::setTownship(const string &township) {this->township = township;}
+void Station::setLine(const string &line) {this->line = line;}
 
-string Station::getC4() {
-    return c4;
-}
 
-string Station::getC5() {
-    return c5;
-}
-
-string Station::setC1(std::string cC1) {
-    c1 = cC1;
-}
-
-string Station::setC2(std::string cC2) {
-    c2 = cC2;
-}
-
-string Station::setC3(std::string cC3) {
-    c3 = cC3;
-}
-
-string Station::setC4(std::string cC4) {
-    c4 = cC4;
-}
-
-string Station::setC5(std::string cC5) {
-    c5 = cC5;
-}

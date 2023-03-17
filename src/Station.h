@@ -6,29 +6,32 @@
 #define PROJECT_STATION_H
 #include <string>
 
+
+
 class Station {
 public:
     Station();
-    Station(std::string C1, std::string C2, std::string C3, std::string C4, std::string C5);
+    Station(const std::string& name, const std::string& district,const std::string& municipality,
+                     const std::string& township, const std::string& line);
 
-    std::string getC1();
-    std::string getC2();
-    std::string getC3();
-    std::string getC4();
-    std::string getC5();
+    std::string getName() const;
+    std::string getDistrict() const;
+    std::string getMunicipality() const;
+    std::string getTownship() const ;
+    std::string getLine() const;
 
-    std::string setC1(std::string cC1);
-    std::string setC2(std::string cC2);
-    std::string setC3(std::string cC3);
-    std::string setC4(std::string cC4);
-    std::string setC5(std::string cC5);
+    void setName(const std::string& name);
+    void setDistrict(const std::string& district);
+    void setMunicipality(const std::string& municipality);
+    void setTownship(const std::string& township);
+    void setLine(const std::string& line);
 
 private:
-    std::string c1;
-    std::string c2;
-    std::string c3;
-    std::string c4;
-    std::string c5;
+    std::string name;
+    std::string district;
+    std::string municipality;
+    std::string township;
+    std::string line;
 
 };
 

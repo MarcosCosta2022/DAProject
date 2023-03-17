@@ -3,45 +3,21 @@
 //
 
 #include "Network.h"
-#include <string>
-
-using namespace std;
 
 Network::Network(std::string StationA, std::string StationB, std::string capacity, std::string service){
     stationA = StationA;
     stationB = StationB;
-    Capacity = capacity;
-    Service = service;
+    this->capacity = capacity;
+    this->service = service;
 }
 
-string Network::getStationA() {
-    return stationA;
-}
+const string &Network::getStationA() const {return stationA;}
+void Network::setStationA(const string &stationA) {this->stationA = stationA;}
+const string &Network::getStationB() const {return stationB;}
+void Network::setStationB(const string &stationB) {this->stationB = stationB;}
+const string &Network::getCapacity() const {return capacity;}
+void Network::setCapacity(const string &capacity){this->capacity = capacity;}
+const string &Network::getService() const {return service;}
+void Network::setService(const string &service) {this->service = service;}
 
-string Network::getStationB() {
-    return stationB;
-}
 
-string Network::getCapacity() {
-    return Capacity;
-}
-
-string Network::getService() {
-    return Service;
-}
-
-string Network::setStationA(string sA) {
-    stationA = sA;
-}
-
-string Network::setStationB(string sB) {
-    stationB = sB;
-}
-
-string Network::setCapacity(string C) {
-    Capacity = C;
-}
-
-string Network::setService(string S) {
-    Service = S;
-}
