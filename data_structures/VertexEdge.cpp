@@ -4,13 +4,13 @@
 
 /************************* Vertex  **************************/
 
-Vertex::Vertex(int id): id(id) {}
+Vertex::Vertex(Station station1): station(station1) {}
 
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).
  */
-Edge * Vertex::addEdge(Vertex *d, double w) {
+Edge * Vertex::addEdge(Vertex *d, Network w) {
     auto newEdge = new Edge(this, d, w);
     adj.push_back(newEdge);
     d->incoming.push_back(newEdge);
@@ -22,18 +22,18 @@ Edge * Vertex::addEdge(Vertex *d, double w) {
  * from a vertex (this).
  * Returns true if successful, and false if such edge does not exist.
  */
-bool Vertex::removeEdge(int destID) {
+bool Vertex::removeEdge(Station destStation) {
     bool removedEdge = false;
     auto it = adj.begin();
     while (it != adj.end()) {
         Edge *edge = *it;
         Vertex *dest = edge->getDest();
-        if (dest->getId() == destID) {
+        if (dest->getStation() == destStation) {
             it = adj.erase(it);
             // Also remove the corresponding edge from the incoming list
             auto it2 = dest->incoming.begin();
             while (it2 != dest->incoming.end()) {
-                if ((*it2)->getOrig()->getId() == id) {
+                if ((*it2)->getOrig()->getStation() == station) {
                     it2 = dest->incoming.erase(it2);
                 }
                 else {
@@ -54,8 +54,8 @@ bool Vertex::operator<(Vertex & vertex) const {
     return this->dist < vertex.dist;
 }
 
-int Vertex::getId() const {
-    return this->id;
+Station Vertex::getStation() const {
+    return this->station;
 }
 
 std::vector<Edge*> Vertex::getAdj() const {
@@ -86,8 +86,8 @@ std::vector<Edge *> Vertex::getIncoming() const {
     return this->incoming;
 }
 
-void Vertex::setId(int id) {
-    this->id = id;
+void Vertex::setStation(Station station2) {
+    this->station = station2;
 }
 
 void Vertex::setVisited(bool visited) {
@@ -112,13 +112,13 @@ void Vertex::setPath(Edge *path) {
 
 /********************** Edge  ****************************/
 
-Edge::Edge(Vertex *orig, Vertex *dest, double w): orig(orig), dest(dest), weight(w) {}
+Edge::Edge(Vertex *orig, Vertex *dest, Network w): orig(orig), dest(dest), weight(w) {}
 
 Vertex * Edge::getDest() const {
     return this->dest;
 }
 
-double Edge::getWeight() const {
+Network Edge::getWeight() const {
     return this->weight;
 }
 

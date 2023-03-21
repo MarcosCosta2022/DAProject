@@ -16,20 +16,20 @@ public:
     /*
     * Auxiliary function to find a vertex with a given ID.
     */
-    Vertex *findVertex(const int &id) const;
+    Vertex *findVertex(Station &station2) const;
     /*
      *  Adds a vertex with a given content or info (in) to a graph (this).
      *  Returns true if successful, and false if a vertex with that content already exists.
      */
-    bool addVertex(const int &id);
+    bool addVertex(Station &station2);
 
     /*
      * Adds an edge to a graph (this), given the contents of the source and
      * destination vertices and the edge weight (w).
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
-    bool addEdge(const int &sourc, const int &dest, double w);
-    bool addBidirectionalEdge(const int &sourc, const int &dest, double w);
+    bool addEdge(Station &sourc, Station &dest, Network w);
+    bool addBidirectionalEdge(Station &sourc, Station &dest, Network w);
 
     int getNumVertex() const;
     std::vector<Vertex *> getVertexSet() const;
@@ -42,7 +42,7 @@ protected:
     /*
      * Finds the index of the vertex with a given content.
      */
-    int findVertexIdx(const int &id) const;
+    //Será importante?? int findVertexIdx(const int &id) const;
 };
 
 void deleteMatrix(int **m, int n);

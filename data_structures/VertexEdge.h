@@ -6,6 +6,8 @@
 #include <queue>
 #include <limits>
 #include <algorithm>
+#include "../src/Station.h"
+#include "../src/Network.h"
 
 class Edge;
 
@@ -15,10 +17,10 @@ class Edge;
 
 class Vertex {
 public:
-    Vertex(int id);
+    Vertex(Station station1);
     bool operator<(Vertex & vertex) const; // // required by MutablePriorityQueue
 
-    int getId() const;
+    Station getStation() const;
     std::vector<Edge *> getAdj() const;
     bool isVisited() const;
     bool isProcessing() const;
@@ -27,18 +29,18 @@ public:
     Edge *getPath() const;
     std::vector<Edge *> getIncoming() const;
 
-    void setId(int info);
+    void setStation(Station station2);
     void setVisited(bool visited);
     void setProcesssing(bool processing);
     void setIndegree(unsigned int indegree);
     void setDist(double dist);
     void setPath(Edge *path);
-    Edge * addEdge(Vertex *dest, double w);
-    bool removeEdge(int destID);
+    Edge * addEdge(Vertex *dest, Network w);
+    bool removeEdge(Station destStation);
 
     //friend class MutablePriorityQueue<Vertex>;
 protected:
-    int id;                // identifier
+    Station station;                // identifier
     std::vector<Edge *> adj;  // outgoing edges
 
     // auxiliary fields
@@ -57,10 +59,10 @@ protected:
 
 class Edge {
 public:
-    Edge(Vertex *orig, Vertex *dest, double w);
+    Edge(Vertex *orig, Vertex *dest, Network w);
 
     Vertex * getDest() const;
-    double getWeight() const;
+    Network getWeight() const;
     bool isSelected() const;
     Vertex * getOrig() const;
     Edge *getReverse() const;
@@ -71,7 +73,7 @@ public:
     void setFlow(double flow);
 protected:
     Vertex * dest; // destination vertex
-    double weight; // edge weight, can also be used for capacity
+    Network weight; // edge weight, can also be used for capacity
 
     // auxiliary fields
     bool selected = false;

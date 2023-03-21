@@ -11,9 +11,9 @@ std::vector<Vertex *> Graph::getVertexSet() const {
 /*
  * Auxiliary function to find a vertex with a given content.
  */
-Vertex * Graph::findVertex(const int &id) const {
+Vertex * Graph::findVertex(Station &station2) const {
     for (auto v : vertexSet)
-        if (v->getId() == id)
+        if (v->getStation() == station2)
             return v;
     return nullptr;
 }
@@ -21,20 +21,22 @@ Vertex * Graph::findVertex(const int &id) const {
 /*
  * Finds the index of the vertex with a given content.
  */
-int Graph::findVertexIdx(const int &id) const {
+/*
+int Graph::findVertexIdx(co &station2) const {
     for (unsigned i = 0; i < vertexSet.size(); i++)
-        if (vertexSet[i]->getId() == id)
+        if (vertexSet[i]->getStation() == station2)
             return i;
     return -1;
 }
+*/
 /*
  *  Adds a vertex with a given content or info (in) to a graph (this).
  *  Returns true if successful, and false if a vertex with that content already exists.
  */
-bool Graph::addVertex(const int &id) {
-    if (findVertex(id) != nullptr)
+bool Graph::addVertex(Station &station2) {
+    if (findVertex(station2) != nullptr)
         return false;
-    vertexSet.push_back(new Vertex(id));
+    vertexSet.push_back(new Vertex(station2));
     return true;
 }
 
@@ -43,7 +45,7 @@ bool Graph::addVertex(const int &id) {
  * destination vertices and the edge weight (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(const int &sourc, const int &dest, double w) {
+bool Graph::addEdge(Station &sourc, Station &dest, Network w) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
@@ -52,7 +54,7 @@ bool Graph::addEdge(const int &sourc, const int &dest, double w) {
     return true;
 }
 
-bool Graph::addBidirectionalEdge(const int &sourc, const int &dest, double w) {
+bool Graph::addBidirectionalEdge(Station &sourc, Station &dest, Network w) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
