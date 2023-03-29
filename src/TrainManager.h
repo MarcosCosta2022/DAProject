@@ -21,10 +21,16 @@ public:
     TrainManager();
     void LoadStations();
     void LoadNetworks();
+    void maxFlowOfTrains();
+
+    Vertex* getStationFromUser();
+    pair<Vertex*,Vertex*> getStationsFromUser();
 private:
     Graph trainNetwork;
-    unordered_map<std::string,Station> stations;
+    unordered_map<std::string,Station> stations; // if these will only be used one time, its better to create them in the function they are used
     unordered_map<Network,double,MyHashFunction> networks;
+
+
 
 };
 

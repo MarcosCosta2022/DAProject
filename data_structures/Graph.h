@@ -17,6 +17,8 @@ public:
     * Auxiliary function to find a vertex with a given ID.
     */
     Vertex *findVertex(Station &station2) const;
+
+    Vertex* findVertexByName(const string& name) const;
     /*
      *  Adds a vertex with a given content or info (in) to a graph (this).
      *  Returns true if successful, and false if a vertex with that content already exists.
@@ -33,6 +35,12 @@ public:
 
     int getNumVertex() const;
     std::vector<Vertex *> getVertexSet() const;
+
+    void testAndVisit(std::queue< Vertex*> &q, Edge *e, Vertex *w, double residual);
+    bool findAugmentingPath(Vertex *s, Vertex *t);
+    double findMinResidualAlongPath(Vertex *s, Vertex *t);
+    void augmentFlowAlongPath(Vertex *s, Vertex *t, double f);
+    void edmondsKarp(Vertex* s , Vertex* t);
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
 
@@ -42,7 +50,7 @@ protected:
     /*
      * Finds the index of the vertex with a given content.
      */
-    //Será importante?? int findVertexIdx(const int &id) const;
+    //Será importante?? int findVertexIdx(const int &id) const; // prob not
 };
 
 void deleteMatrix(int **m, int n);

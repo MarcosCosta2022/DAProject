@@ -12,7 +12,7 @@ using namespace std;
 class Network {
 
 public:
-    Network(std::string stationA, std::string stationB, std::string capacity, std::string service);
+    Network(std::string stationA, std::string stationB, int capacity, std::string service);
 private:
     std::string stationA;
 public:
@@ -24,9 +24,9 @@ public:
 
     void setStationB(const string &stationB);
 
-    const string &getCapacity() const;
+    int getCapacity() const;
 
-    void setCapacity(const string &capacity);
+    void setCapacity(int capacity);
 
     const string &getService() const;
 
@@ -35,7 +35,7 @@ public:
     bool operator==(const Network& a) const;
 private:
     std::string stationB;
-    std::string capacity;
+    int capacity;
     std::string service;
 };
 
