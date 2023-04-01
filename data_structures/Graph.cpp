@@ -155,15 +155,21 @@ void Graph::augmentFlowAlongPath(Vertex *s, Vertex *t, double f) {
     }
 }
 
-void Graph::edmondsKarp(Vertex* s , Vertex* t) {
+unsigned int Graph::edmondsKarp(Vertex* s , Vertex* t) {
     for (auto v : vertexSet) {
         for (auto e: v->getAdj()) {
             e->setFlow(0);
         }
     }
+
     // Loop to find augmentation paths
     while( findAugmentingPath(s, t) ) {
         double f = findMinResidualAlongPath(s, t);
         augmentFlowAlongPath(s, t, f);
     }
+    unsigned int max_flow = 0;
+    for(Edge* e : s->getAdj()){
+        max_flow+=e->getFlow();
+    }
+    return max_flow;
 }

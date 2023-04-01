@@ -34,7 +34,8 @@ void TrainManager::LoadStations() {
     }
 }
 void TrainManager::LoadNetworks() {
-    string sA, sB, cap, serv, line;
+    int cap;
+    string sA, sB, serv, line;
     double w = 0;
     ifstream in; in.open("../resources/network.csv");
     if(!in) cerr << "Could not open the file! " << endl;
@@ -42,7 +43,7 @@ void TrainManager::LoadNetworks() {
     while(getline(in,line)) {
         istringstream iss(line);
         getline(iss, sA, ','); getline(iss, sB, ',');
-        getline(iss, cap, ','); getline(iss, serv, ',');
+        iss >> cap; iss.ignore(1); getline(iss, serv, ',');
         Network a = Network(sA,sB,cap,serv);
         auto it = networks.find(a);
         if(it==networks.end()) {
@@ -54,16 +55,6 @@ void TrainManager::LoadNetworks() {
     }
 }
 
-Vertex *TrainManager::getStationFromUser() {
-    string name;
-    cin >> name;
-    if (cin.fail()){
-        cin.clear();
-        return nullptr;
-    }
-    Vertex* station = trainNetwork.findVertexByName(name);
-    return station;
-}
 
 
 void TrainManager::maxFlowOfTrains() {
@@ -71,15 +62,33 @@ void TrainManager::maxFlowOfTrains() {
     Vertex* s = stations_input.first;
     Vertex* t = stations_input.second;
     if (s == nullptr || t == nullptr || s == t){
-        printf("Invalid stations!\n");
+        cout << "Invalid station!\n";
+        return;
     }
-
+    unsigned int max_flow = trainNetwork.edmondsKarp(s,t);
+    cout << "The maximum number of trains which can travel between station "
+        << s->getStation().getName() << " and station " << t->getStation().getName() << " is "
+        << max_flow << ".\n";
 }
 
 pair<Vertex*,Vertex*> TrainManager::getStationsFromUser() {
-    printf("What is the name of the source station?");
+    cout << "What is the name of the source station?";
     Vertex* source = getStationFromUser();
-    printf("What is the name of the target station?");
+    if (source == nullptr) return {nullptr, nullptr};
+    cout << "What is the name of the target station?";
     Vertex* target = getStationFromUser();
     return {source,target};
+}
+
+Vertex *TrainManager::getStationFromUser() {
+    string name;
+    getline(cin, name);
+    if (cin.fail()){
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cin.clear();
+        return nullptr;
+    }
+    cout << "Searching for station with name "<< name << "\n";
+    Vertex* station = trainNetwork.findVertexByName(name);
+    return station;
 }

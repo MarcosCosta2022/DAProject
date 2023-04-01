@@ -12,7 +12,7 @@ class MyHashFunction {
 public:
     size_t operator()(const Network& p) const
     {
-        return p.getStationA().length() + p.getStationB().length() + p.getService().length() + p.getCapacity().length();
+        return p.getStationA().length() + p.getStationB().length() + p.getService().length() + p.getCapacity();
     }
 };
 
