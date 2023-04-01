@@ -30,8 +30,8 @@ public:
      * destination vertices and the edge weight (w).
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
-    bool addEdge(Station &sourc, Station &dest, Network w);
-    bool addBidirectionalEdge(Station &sourc, Station &dest, Network w);
+    bool addEdge(Station &sourc, Station &dest, pair<int,std::string> w);
+    bool addBidirectionalEdge(Station &sourc, Station &dest, pair<int,std::string> w);
 
     int getNumVertex() const;
     std::vector<Vertex *> getVertexSet() const;

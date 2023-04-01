@@ -10,7 +10,7 @@ Vertex::Vertex(Station station1): station(station1) {}
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).
  */
-Edge * Vertex::addEdge(Vertex *d, Network w) {
+Edge * Vertex::addEdge(Vertex *d, pair<int,std::string> w) {
     auto newEdge = new Edge(this, d, w);
     adj.push_back(newEdge);
     d->incoming.push_back(newEdge);
@@ -112,13 +112,13 @@ void Vertex::setPath(Edge *path) {
 
 /********************** Edge  ****************************/
 
-Edge::Edge(Vertex *orig, Vertex *dest, Network w): orig(orig), dest(dest), weight(w) {}
+Edge::Edge(Vertex *orig, Vertex *dest, pair<int,std::string> w): orig(orig), dest(dest), weight(w) {}
 
 Vertex * Edge::getDest() const {
     return this->dest;
 }
 
-Network Edge::getWeight() const {
+pair<int,std::string> Edge::getWeight() const {
     return this->weight;
 }
 

@@ -28,7 +28,7 @@ void TrainManager::LoadStations() {
         Station a = Station(n,d,m,t,l);
         auto it = stations.find(n);
         if(it==stations.end()){
-            stations.emplace(n,a); //definir hash?
+            stations.emplace(n,a);
             trainNetwork.addVertex(a);
         }
     }
@@ -45,12 +45,13 @@ void TrainManager::LoadNetworks() {
         getline(iss, sA, ','); getline(iss, sB, ',');
         iss >> cap; iss.ignore(1); getline(iss, serv, ',');
         Network a = Network(sA,sB,cap,serv);
+        pair<int,string> weight = make_pair(cap,serv);
         auto it = networks.find(a);
         if(it==networks.end()) {
             networks.emplace(a,w);
             auto it2 = stations.find(sA);
             auto it3 = stations.find(sB);
-            trainNetwork.addEdge(it2->second,it3->second,a);
+            trainNetwork.addBidirectionalEdge(it2->second,it3->second,weight);
         }
     }
 }

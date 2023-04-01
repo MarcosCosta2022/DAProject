@@ -45,7 +45,7 @@ bool Graph::addVertex(Station &station2) {
  * destination vertices and the edge weight (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(Station &sourc, Station &dest, Network w) {
+bool Graph::addEdge(Station &sourc, Station &dest, pair<int,std::string> w) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
@@ -54,7 +54,7 @@ bool Graph::addEdge(Station &sourc, Station &dest, Network w) {
     return true;
 }
 
-bool Graph::addBidirectionalEdge(Station &sourc, Station &dest, Network w) {
+bool Graph::addBidirectionalEdge(Station &sourc, Station &dest, pair<int,std::string> w) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
