@@ -17,7 +17,7 @@ int main() {
                 <<"|    at a given station.                                    |\n"
                 <<"| 6- Calculate the maximum amount of trains that can        |\n"
                 <<"|    simultaneously travel between two given stations with  |\n"
-                <<"|    minimum cost for the company                           |\n"
+                <<"|    minimum cost for the company.                          |\n"
                 <<"| 7- Use a network of reduced connectivity.                 |\n"
                 <<"| 8- Exit                                                   |\n"
                 <<"=============================================================\n";

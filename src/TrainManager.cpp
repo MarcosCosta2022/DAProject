@@ -114,7 +114,7 @@ void TrainManager::useSubGraph() {
              << "| 2- Calculate the maximum number of trains which can travel |\n"
              << "|    between two given stations.                             |\n"
              << "| 3- Calculate the top-k most affected stations.             |\n"
-             << "| 4- Undo changes to network and exit.                       |\n"
+             << "| 4- Undo changes to network and go back.                    |\n"
              << "==============================================================\n";
 
         string choice = getAnswer();
