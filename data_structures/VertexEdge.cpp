@@ -50,6 +50,8 @@ bool Vertex::removeEdge(Station destStation) {
     return removedEdge;
 }
 
+
+
 bool Vertex::operator<(Vertex & vertex) const {
     return this->dist < vertex.dist;
 }
@@ -109,6 +111,8 @@ void Vertex::setDist(double dist) {
 void Vertex::setPath(Edge *path) {
     this->path = path;
 }
+
+
 
 /********************** Edge  ****************************/
 

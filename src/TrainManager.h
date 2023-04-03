@@ -23,7 +23,9 @@ public:
     void LoadNetworks();
     void maxFlowOfTrains();
     void calculateMaxFlowWithMinimumCost();
+    void useSubGraph();
 
+    string getAnswer();
     Vertex* getStationFromUser();
     pair<Vertex*,Vertex*> getStationsFromUser();
 private:

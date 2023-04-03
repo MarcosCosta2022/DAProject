@@ -41,6 +41,8 @@ public:
     double findMinResidualAlongPath(Vertex *s, Vertex *t);
     void augmentFlowAlongPath(Vertex *s, Vertex *t, double f);
     unsigned int edmondsKarp(Vertex* s , Vertex* t);
+
+   Edge* removeBidirectionalEdge(Vertex* s , Vertex* t);
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
 
