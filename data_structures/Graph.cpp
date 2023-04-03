@@ -45,22 +45,22 @@ bool Graph::addVertex(Station &station2) {
  * destination vertices and the edge weight (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(Station &sourc, Station &dest, pair<int,std::string> w) {
+bool Graph::addEdge(Station &sourc, Station &dest, int w , const string& service) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
         return false;
-    v1->addEdge(v2, w);
+    v1->addEdge(v2, w ,service);
     return true;
 }
 
-bool Graph::addBidirectionalEdge(Station &sourc, Station &dest, pair<int,std::string> w) {
+bool Graph::addBidirectionalEdge(Station &sourc, Station &dest, int w, const string& service) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
         return false;
-    auto e1 = v1->addEdge(v2, w);
-    auto e2 = v2->addEdge(v1, w);
+    auto e1 = v1->addEdge(v2, w ,service);
+    auto e2 = v2->addEdge(v1, w , service);
     e1->setReverse(e2);
     e2->setReverse(e1);
     return true;
@@ -115,7 +115,7 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
         auto v = q.front();
         q.pop();
         for(auto e: v->getAdj()) {
-            testAndVisit(q, e, e->getDest(), e->getWeight().getCapacity() - e->getFlow());
+            testAndVisit(q, e, e->getDest(), e->getWeight() - e->getFlow());
         }
         for(auto e: v->getIncoming()) {
             testAndVisit(q, e, e->getOrig(), e->getFlow());
@@ -129,7 +129,7 @@ double Graph::findMinResidualAlongPath(Vertex *s, Vertex *t) {
     for (auto v = t; v != s; ) {
         auto e = v->getPath();
         if (e->getDest() == v) {
-            f = std::min(f, e->getWeight().getCapacity() - e->getFlow());
+            f = std::min(f, e->getWeight() - e->getFlow());
             v = e->getOrig();
         }
         else {
@@ -173,3 +173,16 @@ unsigned int Graph::edmondsKarp(Vertex* s , Vertex* t) {
     }
     return max_flow;
 }
+
+Edge* Graph::removeBidirectionalEdge(Vertex *s, Vertex *t) {
+    Edge* res = nullptr;
+    for (Edge* e : s->getAdj()){
+        if (e->getDest() == t){
+            res = new Edge(*e);
+        }
+    }
+    if (res == nullptr) return nullptr;
+    if (s->removeEdge(t->getStation()) && t->removeEdge(s->getStation())) return res;
+    else return nullptr;
+}
+
