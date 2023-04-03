@@ -40,6 +40,9 @@ int main() {
             case 2:
                 h.maxFlowOfTrains();
                 break;
+            case 6:
+                h.calculateMaxFlowWithMinimumCost();
+                break;
             case 9:
                 return 0;
             default:

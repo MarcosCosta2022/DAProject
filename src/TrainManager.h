@@ -22,6 +22,7 @@ public:
     void LoadStations();
     void LoadNetworks();
     void maxFlowOfTrains();
+    void calculateMaxFlowWithMinimumCost();
 
     Vertex* getStationFromUser();
     pair<Vertex*,Vertex*> getStationsFromUser();

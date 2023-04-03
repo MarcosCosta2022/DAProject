@@ -35,7 +35,7 @@ public:
     void setIndegree(unsigned int indegree);
     void setDist(double dist);
     void setPath(Edge *path);
-    Edge * addEdge(Vertex *dest, pair<int,std::string> w);
+    Edge * addEdge(Vertex *dest, int  w, const string& service);
     bool removeEdge(Station destStation);
 
     //friend class MutablePriorityQueue<Vertex>;
@@ -59,10 +59,11 @@ protected:
 
 class Edge {
 public:
-    Edge(Vertex *orig, Vertex *dest, pair<int,std::string> w);
+    Edge(Vertex *orig, Vertex *dest, int w ,const  string& service);
 
     Vertex * getDest() const;
-    pair<int,std::string> getWeight() const;
+    int getWeight() const;
+    string getService() const;
     bool isSelected() const;
     Vertex * getOrig() const;
     Edge *getReverse() const;
@@ -73,7 +74,8 @@ public:
     void setFlow(double flow);
 protected:
     Vertex * dest; // destination vertex
-    pair<int,std::string> weight; // edge weight, can also be used for capacity
+    int weight; // edge weight, can also be used for capacity
+    string service; // assim é mais facil
 
     // auxiliary fields
     bool selected = false;

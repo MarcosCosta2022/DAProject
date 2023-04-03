@@ -51,7 +51,7 @@ void TrainManager::LoadNetworks() {
             networks.emplace(a,w);
             auto it2 = stations.find(sA);
             auto it3 = stations.find(sB);
-            trainNetwork.addBidirectionalEdge(it2->second,it3->second,weight);
+            trainNetwork.addBidirectionalEdge(it2->second,it3->second,cap , serv);
         }
     }
 }
@@ -92,4 +92,24 @@ Vertex *TrainManager::getStationFromUser() {
     cout << "Searching for station with name "<< name << "\n";
     Vertex* station = trainNetwork.findVertexByName(name);
     return station;
+}
+
+void TrainManager::calculateMaxFlowWithMinimumCost() {
+    auto stations_input = getStationsFromUser();
+    Vertex* s = stations_input.first;
+    Vertex* t = stations_input.second;
+    if (s == nullptr || t == nullptr || s == t) {
+        cout << "Invalid station!\n";
+        return;
+    }
+    for (Vertex* v : trainNetwork.getVertexSet()){
+        for (int i = 0 ; i < v->getAdj().size();i++){
+            for (int j = i+1; j < v->getAdj().size();j++){
+                if (v->getAdj()[i]->getService() == v->getAdj()[j]->getService() && v->getAdj()[i]->getDest() == v->getAdj()[j]->getDest()){
+                    cout << "found one\n";
+                }
+            }
+        }
+    }
+
 }
