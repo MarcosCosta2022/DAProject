@@ -57,7 +57,23 @@ void TrainManager::LoadNetworks() {
 }
 
 
-
+vector<pair<Station,Station>> TrainManager::stations_most_amount_trains() {
+    int max = 0;
+    vector<pair<Station,Station>> final;
+    for (auto v : trainNetwork.getVertexSet()) {
+        for (auto e : v->getAdj()) {
+            if (e->getWeight().first > max) {
+                final.clear();
+                max = e->getWeight().first;
+                final.push_back(make_pair(e->getOrig()->getStation(), e->getDest()->getStation()));
+            }
+            if (e->getWeight().first == max) {
+                final.push_back(make_pair(e->getOrig()->getStation(), e->getDest()->getStation()));
+            }
+        }
+    }
+    return final;
+}
 void TrainManager::maxFlowOfTrains() {
     auto stations_input = getStationsFromUser();
     Vertex* s = stations_input.first;

@@ -22,6 +22,7 @@ public:
     void LoadStations();
     void LoadNetworks();
     void maxFlowOfTrains();
+    vector<pair<Station,Station>> stations_most_amount_trains();
 
     Vertex* getStationFromUser();
     pair<Vertex*,Vertex*> getStationsFromUser();
