@@ -60,19 +60,27 @@ void TrainManager::LoadNetworks() {
 vector<pair<Station,Station>> TrainManager::stations_most_amount_trains() {
     int max = 0;
     vector<pair<Station,Station>> final;
+    for(auto v: trainNetwork.getVertexSet()) v->setVisited(false);
     for (auto v : trainNetwork.getVertexSet()) {
+        v->setVisited(true);
         for (auto e : v->getAdj()) {
-            if (e->getWeight() > max) {
+            if (e->getWeight() > max && !(e->getDest()->isVisited())) {
                 final.clear();
                 max = e->getWeight();
                 final.push_back(make_pair(e->getOrig()->getStation(), e->getDest()->getStation()));
+                continue;
             }
-            if (e->getWeight() == max) {
+            if (e->getWeight() == max && !(e->getDest()->isVisited())) {
                 final.push_back(make_pair(e->getOrig()->getStation(), e->getDest()->getStation()));
+                continue;
             }
+            e->getDest()->setVisited(true);
         }
     }
-    return final;
+    cout << "The pair(s) of stations that require the most amount of trains are: \n";
+    for(auto it = final.begin(); it != final.end(); it++) {
+        cout << it->first.getName() << " and " << it->second.getName() << '\n';
+    }
 }
 void TrainManager::maxFlowOfTrains() {
     auto stations_input = getStationsFromUser();
