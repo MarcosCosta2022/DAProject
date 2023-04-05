@@ -33,7 +33,8 @@ int main() {
                 h.LoadNetworks();
                 h.LoadStations();
                 break;
-            case 2:h.maxFlowOfTrains();break;
+            case 2: h.maxFlowOfTrains();break;
+            case 3: h.stations_most_amount_trains(); break;
             case 5: h.calculateMaxFlowFromNetworkToSingleStation(); break;
             case 6: h.calculateMaxFlowWithMinimumCost();break;
             case 7: h.useSubGraph();break;
