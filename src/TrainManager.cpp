@@ -57,7 +57,26 @@ void TrainManager::LoadNetworks() {
 }
 
 
-vector<pair<Station,Station>> TrainManager::stations_most_amount_trains() {
+void TrainManager::stations_most_amount_trains() {
+    unsigned long max = 0;
+    vector<pair<Vertex*,Vertex*>> res;
+    for (int i = 0 ; i < trainNetwork.getNumVertex();i++){
+        for (int j = i+1 ; j < trainNetwork.getNumVertex();j++){
+            unsigned long temp = trainNetwork.edmondsKarp(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+            if (temp > max){
+                res.clear();
+                max = temp;
+                res.emplace_back(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+            }
+            else if (temp == max){
+                res.emplace_back(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+            }
+        }
+    }
+    for (auto& p : res){
+        cout << p.first->getStation().getName() << " and " << p.second->getStation().getName() << '\n';
+    }
+    /*
     int max = 0;
     vector<pair<Station,Station>> final;
     for(auto v: trainNetwork.getVertexSet()) v->setVisited(false);
@@ -81,6 +100,7 @@ vector<pair<Station,Station>> TrainManager::stations_most_amount_trains() {
     for(auto it = final.begin(); it != final.end(); it++) {
         cout << it->first.getName() << " and " << it->second.getName() << '\n';
     }
+     */
 }
 void TrainManager::maxFlowOfTrains() {
     auto stations_input = getStationsFromUser();

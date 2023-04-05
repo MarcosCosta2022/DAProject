@@ -23,7 +23,7 @@ public:
     void LoadNetworks();
     void maxFlowOfTrains();
     void calculateMaxFlowFromNetworkToSingleStation();
-    vector<pair<Station,Station>> stations_most_amount_trains();
+    void stations_most_amount_trains();
     void calculateMaxFlowWithMinimumCost();
     void useSubGraph();
 
