@@ -59,20 +59,27 @@ void TrainManager::LoadNetworks() {
 
 void TrainManager::stations_most_amount_trains() {
     unsigned long max = 0;
-    vector<pair<Vertex*,Vertex*>> res;
-    for (int i = 0 ; i < trainNetwork.getNumVertex();i++){
-        for (int j = i+1 ; j < trainNetwork.getNumVertex();j++){
-            unsigned long temp = trainNetwork.edmondsKarp(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
-            if (temp > max){
-                res.clear();
-                max = temp;
-                res.emplace_back(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
-            }
-            else if (temp == max){
-                res.emplace_back(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+    vector<pair<Vertex*,Vertex*>>& res = pairsOfStationsWithBiggestMaxFlow;
+    if (res.size() != 0){
+        max = trainNetwork.edmondsKarp(res[0].first,res[0].second);
+    }
+    else{
+        cout << "Calculating...\n";
+        for (int i = 0 ; i < trainNetwork.getNumVertex();i++){
+            for (int j = i+1 ; j < trainNetwork.getNumVertex();j++){
+                unsigned long temp = trainNetwork.edmondsKarp(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+                if (temp > max){
+                    res.clear();
+                    max = temp;
+                    res.emplace_back(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+                }
+                else if (temp == max){
+                    res.emplace_back(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+                }
             }
         }
     }
+    cout << "The greatest maximum number of trains between stations is "<< max << " and the pairs of stations are:\n";
     for (auto& p : res){
         cout << p.first->getStation().getName() << " and " << p.second->getStation().getName() << '\n';
     }
