@@ -167,4 +167,48 @@ string TrainManager::getAnswer() {
     return answer;
 }
 
+void TrainManager::calculateMaxFlowFromNetworkToSingleStation() {
+    cout << "What is the name of the station?\n";
+    Vertex* v = getStationFromUser();
+    if (v == nullptr) {
+        cout << "Invalid Station\n";
+        return;
+    }
+
+    vector<Vertex*> leafNodes ;
+    trainNetwork.BFS(v,leafNodes);
+
+
+    auto newNode = new Vertex(Station("temp","p","","",""));
+    for (Vertex* node : leafNodes){
+        Edge* edge = newNode->addEdge(node,INF,"No service");
+        edge->setFlow(0);
+        cout << "One leaf node is : " << node->getStation().getName()<<"!\n";
+    }
+    int test = 0;
+    for(Edge* e : newNode->getAdj()){
+        test++;
+    }
+    cout << "so we have "<< test << " adjacent edges to the new node\n";
+    unsigned int p = trainNetwork.edmondsKarp(newNode,v);
+    cout << "The maximum number of trains that can simultaneously arrive at station "<< v->getStation().getName()<<
+        " is " << p << "!\n";
+
+    for (Edge* e : newNode->getAdj()){
+        newNode->removeEdge(e->getDest()->getStation());
+    }
+    delete newNode;
+
+
+    //this part is for comparison, meaning its temporary
+    unsigned int comparison = 0;
+    for (Edge* e : v->getAdj()){
+        comparison+= e->getWeight();
+    }
+    cout << "For comparison, this is the sum of the capacity of every adjacent segment to station "<<
+        v->getStation().getName()<< ": " << comparison << ".\n";
+}
+
+
+
 

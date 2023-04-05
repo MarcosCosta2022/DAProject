@@ -43,6 +43,7 @@ public:
     unsigned int edmondsKarp(Vertex* s , Vertex* t);
 
    Edge* removeBidirectionalEdge(Vertex* s , Vertex* t);
+    void BFS(Vertex *n, vector<Vertex*>& v);
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
 

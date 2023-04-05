@@ -22,8 +22,10 @@ public:
     void LoadStations();
     void LoadNetworks();
     void maxFlowOfTrains();
+    void calculateMaxFlowFromNetworkToSingleStation();
     void calculateMaxFlowWithMinimumCost();
     void useSubGraph();
+
 
     string getAnswer();
     Vertex* getStationFromUser();

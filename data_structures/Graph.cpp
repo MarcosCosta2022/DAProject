@@ -185,4 +185,27 @@ Edge* Graph::removeBidirectionalEdge(Vertex *s, Vertex *t) {
     if (s->removeEdge(t->getStation()) && t->removeEdge(s->getStation())) return res;
     else return nullptr;
 }
-
+void Graph::BFS(Vertex *n, vector<Vertex*>& v) {
+    for (Vertex* l : vertexSet){
+        l->setVisited(false);
+    }
+    queue<Vertex*> q;
+    q.push(n);
+    n->setVisited(true);
+    while(!q.empty()){
+        auto p = q.front();
+        q.pop();
+        bool check = true;
+        for (Edge* e : p->getAdj()){
+            Vertex* d = e->getDest();
+            if (!d->isVisited()){
+                d->setVisited(true);
+                check = false;
+                q.push(d);
+            }
+        }
+        if (check){
+            v.push_back(p);
+        }
+    }
+}
