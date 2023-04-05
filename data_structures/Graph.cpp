@@ -139,7 +139,26 @@ double Graph::findMinResidualAlongPath(Vertex *s, Vertex *t) {
     }
     return f;
 }
-
+pair<double,double> Graph::findMinResidualAlongPath2(Vertex *s, Vertex *t) {
+    double f = INF;
+    double c = 0;
+    for (auto v = t; v != s; ) {
+        auto e = v->getPath();
+        if (e->getDest() == v) {
+            f = std::min(f, e->getWeight() - e->getFlow());
+            v = e->getOrig();
+            if(e->getService() == "STANDARD") c+=2;
+            if(e->getService() == "ALFA") c+=4;
+        }
+        else {
+            f = std::min(f, e->getFlow());
+            v = e->getDest();
+            if(e->getService() == "STANDARD") c+=2;
+            if(e->getService() == "ALFA") c+=4;
+        }
+    }
+    return make_pair(f,c);
+}
 void Graph::augmentFlowAlongPath(Vertex *s, Vertex *t, double f) {
     for (auto v = t; v != s; ) {
         auto e = v->getPath();

@@ -45,7 +45,6 @@ void TrainManager::LoadNetworks() {
         getline(iss, sA, ','); getline(iss, sB, ',');
         iss >> cap; iss.ignore(1); getline(iss, serv, ',');
         Network a = Network(sA,sB,cap,serv);
-        pair<int,string> weight = make_pair(cap,serv);
         auto it = networks.find(a);
         if(it==networks.end()) {
             networks.emplace(a,w);
@@ -57,7 +56,7 @@ void TrainManager::LoadNetworks() {
 }
 
 
-vector<pair<Station,Station>> TrainManager::stations_most_amount_trains() {
+void TrainManager::stations_most_amount_trains() {
     int max = 0;
     vector<pair<Station,Station>> final;
     for(auto v: trainNetwork.getVertexSet()) v->setVisited(false);
@@ -77,6 +76,8 @@ vector<pair<Station,Station>> TrainManager::stations_most_amount_trains() {
             e->getDest()->setVisited(true);
         }
     }
+    auto a = stations.find("Alcantâra-Mar");
+    trainNetwork.findVertex(a->second);
     cout << "The pair(s) of stations that require the most amount of trains are: \n";
     for(auto it = final.begin(); it != final.end(); it++) {
         cout << it->first.getName() << " and " << it->second.getName() << '\n';
@@ -125,8 +126,20 @@ void TrainManager::calculateMaxFlowWithMinimumCost() {
         cout << "Invalid station!\n";
         return;
     }
+    for (auto v : trainNetwork.getVertexSet()) {
+        for (auto e: v->getAdj()) {
+            e->setFlow(0);
+        }
+    }
+    vector<double> values;
+    // Loop to find augmentation paths
+    while( trainNetwork.findAugmentingPath(s, t) ) {
+        double f = trainNetwork.findMinResidualAlongPath(s, t);
+        double c = trainNetwork.findMinResidualAlongPath2(s,t);
+        values.push_back(c);
+        trainNetwork.augmentFlowAlongPath(s, t, f);
+    }
 
-    // don't know what we are supposed to do here
 }
 
 void TrainManager::useSubGraph() {
