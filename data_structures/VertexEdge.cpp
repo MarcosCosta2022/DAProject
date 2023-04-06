@@ -17,6 +17,7 @@ Edge * Vertex::addEdge(Vertex *d,int w, const string& service) {
     return newEdge;
 }
 
+
 /*
  * Auxiliary function to remove an outgoing edge (with a given destination (d))
  * from a vertex (this).
@@ -112,6 +113,11 @@ void Vertex::setPath(Edge *path) {
     this->path = path;
 }
 
+void Vertex::removeAllEdges() {
+    while(adj.size() != 0){
+        removeEdge(adj[0]->getDest()->getStation());
+    }
+}
 
 
 /********************** Edge  ****************************/

@@ -25,6 +25,7 @@ public:
      */
     bool addVertex(Station &station2);
 
+    bool removeVertex(Station &station2);
     /*
      * Adds an edge to a graph (this), given the contents of the source and
      * destination vertices and the edge weight (w).
@@ -42,7 +43,7 @@ public:
     void augmentFlowAlongPath(Vertex *s, Vertex *t, double f);
     unsigned int edmondsKarp(Vertex* s , Vertex* t);
 
-   Edge* removeBidirectionalEdge(Vertex* s , Vertex* t);
+    pair<bool,Edge> removeBidirectionalEdge(Vertex* s , Vertex* t);
     void BFS(Vertex *n, vector<Vertex*>& v);
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set

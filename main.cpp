@@ -38,7 +38,7 @@ int main() {
             case 5: h.calculateMaxFlowFromNetworkToSingleStation(); break;
             case 6: h.calculateMaxFlowWithMinimumCost();break;
             case 7: h.useSubGraph();break;
-            case 9: return 0;
+            case 8: return 0;
             default: cout <<"INVALID INPUT\n"; break;
         }
     }
