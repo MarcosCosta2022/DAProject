@@ -148,13 +148,13 @@ pair<double,double> Graph::findMinResidualAlongPath2(Vertex *s, Vertex *t) {
             f = std::min(f, e->getWeight() - e->getFlow());
             v = e->getOrig();
             if(e->getService() == "STANDARD") c+=2;
-            if(e->getService() == "ALFA") c+=4;
+            else if(e->getService() == "ALFA PENDULAR") c+=4;
         }
         else {
             f = std::min(f, e->getFlow());
             v = e->getDest();
             if(e->getService() == "STANDARD") c+=2;
-            if(e->getService() == "ALFA") c+=4;
+            else if(e->getService() == "ALFA PENDULAR") c+=4;
         }
     }
     return make_pair(f,c);
@@ -204,4 +204,27 @@ Edge* Graph::removeBidirectionalEdge(Vertex *s, Vertex *t) {
     if (s->removeEdge(t->getStation()) && t->removeEdge(s->getStation())) return res;
     else return nullptr;
 }
-
+void Graph::BFS(Vertex *n, vector<Vertex*>& v) {
+    for (Vertex* l : vertexSet){
+        l->setVisited(false);
+    }
+    queue<Vertex*> q;
+    q.push(n);
+    n->setVisited(true);
+    while(!q.empty()){
+        auto p = q.front();
+        q.pop();
+        bool check = true;
+        for (Edge* e : p->getAdj()){
+            Vertex* d = e->getDest();
+            if (!d->isVisited()){
+                d->setVisited(true);
+                check = false;
+                q.push(d);
+            }
+        }
+        if (check){
+            v.push_back(p);
+        }
+    }
+}

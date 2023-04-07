@@ -15,16 +15,37 @@ TrainManager::TrainManager() {
 }
 
 void TrainManager::LoadStations() {
-    string n, d, m, t, l, line;
-    int count = 0;
+    string n, d, m, t, l, line, as;
     ifstream in; in.open("../resources/stations.csv");
     if(!in) cerr << "Could not open the file!" << endl;
     getline(in,line);
     while(getline(in,line)) {
         istringstream iss(line);
-        count++;
-        getline(iss, n, ','); getline(iss, d, ','); getline(iss, m, ',');
-        getline(iss,t, ','); getline(iss,l);
+        char delimiter = ',';
+        bool inside_quotes = false;
+        while (getline(iss, line, delimiter)) {
+            if (line.front() == '"' && line.back() != '"') {
+                inside_quotes = true;
+                n = line;
+                continue;
+            }
+            else if (line.front() != '"' && line.back() == '"') {
+                inside_quotes = false;
+                n += delimiter + line;
+                continue;
+            }
+            else if (inside_quotes) {
+                n += delimiter + line;
+                continue;
+            }
+
+            if (n.empty()) n = line;
+            else if (d.empty()) d = line;
+            else if (m.empty()) m = line;
+            else if (t.empty()) t = line;
+            else if (l.empty()) l = line;
+        }
+
         Station a = Station(n,d,m,t,l);
         auto it = stations.find(n);
         if(it==stations.end()){
@@ -57,30 +78,30 @@ void TrainManager::LoadNetworks() {
 
 
 void TrainManager::stations_most_amount_trains() {
-    int max = 0;
-    vector<pair<Station,Station>> final;
-    for(auto v: trainNetwork.getVertexSet()) v->setVisited(false);
-    for (auto v : trainNetwork.getVertexSet()) {
-        v->setVisited(true);
-        for (auto e : v->getAdj()) {
-            if (e->getWeight() > max && !(e->getDest()->isVisited())) {
-                final.clear();
-                max = e->getWeight();
-                final.push_back(make_pair(e->getOrig()->getStation(), e->getDest()->getStation()));
-                continue;
+    unsigned long max = 0;
+    vector<pair<Vertex*,Vertex*>>& res = pairsOfStationsWithBiggestMaxFlow;
+    if (res.size() != 0){
+        max = trainNetwork.edmondsKarp(res[0].first,res[0].second);
+    }
+    else{
+        cout << "Calculating...\n";
+        for (int i = 0 ; i < trainNetwork.getNumVertex();i++){
+            for (int j = i+1 ; j < trainNetwork.getNumVertex();j++){
+                unsigned long temp = trainNetwork.edmondsKarp(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+                if (temp > max){
+                    res.clear();
+                    max = temp;
+                    res.emplace_back(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+                }
+                else if (temp == max){
+                    res.emplace_back(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+                }
             }
-            if (e->getWeight() == max && !(e->getDest()->isVisited())) {
-                final.push_back(make_pair(e->getOrig()->getStation(), e->getDest()->getStation()));
-                continue;
-            }
-            e->getDest()->setVisited(true);
         }
     }
-    auto a = stations.find("Alcantâra-Mar");
-    trainNetwork.findVertex(a->second);
-    cout << "The pair(s) of stations that require the most amount of trains are: \n";
-    for(auto it = final.begin(); it != final.end(); it++) {
-        cout << it->first.getName() << " and " << it->second.getName() << '\n';
+    cout << "The greatest maximum number of trains between stations is "<< max << " and the pairs of stations are:\n";
+    for (auto& p : res){
+        cout << p.first->getStation().getName() << " and " << p.second->getStation().getName() << '\n';
     }
 }
 void TrainManager::maxFlowOfTrains() {
@@ -131,15 +152,23 @@ void TrainManager::calculateMaxFlowWithMinimumCost() {
             e->setFlow(0);
         }
     }
-    vector<double> values;
+    vector<pair<double,double>> values;
+    double maxf = 0;
     // Loop to find augmentation paths
     while( trainNetwork.findAugmentingPath(s, t) ) {
-        double f = trainNetwork.findMinResidualAlongPath(s, t);
-        double c = trainNetwork.findMinResidualAlongPath2(s,t);
-        values.push_back(c);
-        trainNetwork.augmentFlowAlongPath(s, t, f);
+        pair<double,double> c = trainNetwork.findMinResidualAlongPath2(s,t);
+        trainNetwork.augmentFlowAlongPath(s, t,c.first);
+        if(maxf < c.first) {
+            maxf = c.first;
+            values.clear();
+            values.push_back(c);
+        }
+        if(maxf == c.first) values.push_back(c);
     }
 
+    for(int i = 0; i<values.size();i++) {
+        cout << values[i].first << ' ' << values[i].second << '\n';
+    }
 }
 
 void TrainManager::useSubGraph() {
@@ -203,5 +232,49 @@ string TrainManager::getAnswer() {
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');//this is required because the names of the stations have spaces
     return answer;
 }
+
+void TrainManager::calculateMaxFlowFromNetworkToSingleStation() {
+    cout << "What is the name of the station?\n";
+    Vertex* v = getStationFromUser();
+    if (v == nullptr) {
+        cout << "Invalid Station\n";
+        return;
+    }
+
+    vector<Vertex*> leafNodes ;
+    trainNetwork.BFS(v,leafNodes);
+
+
+    auto newNode = new Vertex(Station("temp","p","","",""));
+    for (Vertex* node : leafNodes){
+        Edge* edge = newNode->addEdge(node,INF,"No service");
+        edge->setFlow(0);
+        cout << "One leaf node is : " << node->getStation().getName()<<"!\n";
+    }
+    int test = 0;
+    for(Edge* e : newNode->getAdj()){
+        test++;
+    }
+    cout << "so we have "<< test << " adjacent edges to the new node\n";
+    unsigned int p = trainNetwork.edmondsKarp(newNode,v);
+    cout << "The maximum number of trains that can simultaneously arrive at station "<< v->getStation().getName()<<
+        " is " << p << "!\n";
+
+    for (Edge* e : newNode->getAdj()){
+        newNode->removeEdge(e->getDest()->getStation());
+    }
+    delete newNode;
+
+
+    //this part is for comparison, meaning its temporary
+    unsigned int comparison = 0;
+    for (Edge* e : v->getAdj()){
+        comparison+= e->getWeight();
+    }
+    cout << "For comparison, this is the sum of the capacity of every adjacent segment to station "<<
+        v->getStation().getName()<< ": " << comparison << ".\n";
+}
+
+
 
 

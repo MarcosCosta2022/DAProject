@@ -22,9 +22,11 @@ public:
     void LoadStations();
     void LoadNetworks();
     void maxFlowOfTrains();
+    void calculateMaxFlowFromNetworkToSingleStation();
     void stations_most_amount_trains();
     void calculateMaxFlowWithMinimumCost();
     void useSubGraph();
+
 
     string getAnswer();
     Vertex* getStationFromUser();
@@ -33,7 +35,7 @@ private:
     Graph trainNetwork;
     unordered_map<std::string,Station> stations; // if these will only be used one time, its better to create them in the function they are used
     unordered_map<Network,double,MyHashFunction> networks;
-
+    vector<pair<Vertex*,Vertex*>> pairsOfStationsWithBiggestMaxFlow;
 
 
 };

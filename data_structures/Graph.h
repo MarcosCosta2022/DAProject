@@ -41,18 +41,17 @@ public:
     double findMinResidualAlongPath(Vertex *s, Vertex *t);
     void augmentFlowAlongPath(Vertex *s, Vertex *t, double f);
     unsigned int edmondsKarp(Vertex* s , Vertex* t);
+    pair<double, double> findMinResidualAlongPath2(Vertex *s, Vertex *t);
 
-   Edge* removeBidirectionalEdge(Vertex* s , Vertex* t);
+
+    Edge* removeBidirectionalEdge(Vertex* s , Vertex* t);
+    void BFS(Vertex *n, vector<Vertex*>& v);
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
 
     double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
 
-    /*
-     * Finds the index of the vertex with a given content.
-     */
-    //Será importante?? int findVertexIdx(const int &id) const; // prob not
 };
 
 void deleteMatrix(int **m, int n);
