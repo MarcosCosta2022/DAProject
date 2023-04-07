@@ -37,7 +37,7 @@ public:
     void setPath(Edge *path);
     Edge * addEdge(Vertex *dest, int  w, const string& service);
     bool removeEdge(Station destStation);
-
+    void removeAllEdges();
     //friend class MutablePriorityQueue<Vertex>;
 protected:
     Station station;                // identifier
@@ -46,7 +46,7 @@ protected:
     // auxiliary fields
     bool visited = false; // used by DFS, BFS, Prim ...
     bool processing = false; // used by isDAG (in addition to the visited attribute)
-    unsigned int indegree; // used by topsort
+    unsigned int indegree; // used by topsort and to know the diff a segment failure causes on the network
     double dist = 0;
     Edge *path = nullptr;
 

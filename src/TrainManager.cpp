@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <climits>
 #include "Network.h"
 using namespace std;
 
@@ -80,7 +81,7 @@ void TrainManager::LoadNetworks() {
 void TrainManager::stations_most_amount_trains() {
     unsigned long max = 0;
     vector<pair<Vertex*,Vertex*>>& res = pairsOfStationsWithBiggestMaxFlow;
-    if (res.size() != 0){
+    if (!res.empty()){
         max = trainNetwork.edmondsKarp(res[0].first,res[0].second);
     }
     else{
@@ -113,9 +114,11 @@ void TrainManager::maxFlowOfTrains() {
         return;
     }
     unsigned int max_flow = trainNetwork.edmondsKarp(s,t);
+    cout.clear();
+    cout << endl;
     cout << "The maximum number of trains which can travel between station "
         << s->getStation().getName() << " and station " << t->getStation().getName() << " is "
-        << max_flow << ".\n";
+        << max_flow << "." << endl;
 }
 
 pair<Vertex*,Vertex*> TrainManager::getStationsFromUser() {
@@ -172,14 +175,14 @@ void TrainManager::calculateMaxFlowWithMinimumCost() {
 }
 
 void TrainManager::useSubGraph() {
-    vector<Edge*> deletedEdges;
+    vector<Edge> deletedEdges;
 
     while (true){
         cout << "==============================================================\n"
              << "| 1- Delete a segment                                        |\n"
              << "| 2- Calculate the maximum number of trains which can travel |\n"
              << "|    between two given stations.                             |\n"
-             << "| 3- Calculate the top-k most affected stations.             |\n"
+             << "| 3- Calculate the top-k most affected stations per segment. |\n"
              << "| 4- Undo changes to network and go back.                    |\n"
              << "==============================================================\n";
 
@@ -193,26 +196,73 @@ void TrainManager::useSubGraph() {
                 cout << "Invalid station!\n";
             }
 
-            Edge* temp = trainNetwork.removeBidirectionalEdge(s,t);
-            if (temp == nullptr){
+            auto temp = trainNetwork.removeBidirectionalEdge(s,t);
+            if (!temp.first){
                 cout << "Some problem occurred when trying to delete that segment!\n";
             }
             else {
-                deletedEdges.push_back(temp);
+                deletedEdges.push_back(temp.second);
             }
         }
         else if (choice == "2"){
             maxFlowOfTrains();
         }
         else if (choice == "3"){
-            // this requires other features which are not yet implemented
+            cout << "How many stations per segment?(k)\n";
+            int k;
+            cin >> k;
+            if (cin.fail()){
+                cin.clear();
+                k = 0;
+            }
+            cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+            if (k < 1){
+                cout << "\nInvalid k\n";
+                continue;
+            }
+
+            for (Edge& e : deletedEdges){
+                Station s1 = e.getOrig()->getStation();
+                Station s2 = e.getDest()->getStation();
+                trainNetwork.addBidirectionalEdge(s1,s2,e.getWeight(),e.getService());
+            }
+            vector<Vertex*> tempVerteces;
+            for (Edge& e : deletedEdges){
+                for (Vertex* v : trainNetwork.getVertexSet()){
+                    if (v->getStation().getLine() == e.getOrig()->getStation().getLine()){
+                        auto p = getMaxFlowToSingleStation(v);
+                        v->setIndegree(p);
+                    }
+                }
+                auto temp = trainNetwork.removeBidirectionalEdge(e.getOrig(),e.getDest());
+                for (Vertex* v : trainNetwork.getVertexSet()){
+                    if (v->getStation().getLine() == e.getOrig()->getStation().getLine()){
+                        auto p = getMaxFlowToSingleStation(v);
+                        int tempDiff  = p-v->getIndegree();
+                        if (tempDiff < 0 ) tempDiff *= -1;
+                        v->setIndegree(tempDiff);
+                        if (v->getIndegree() != 0) tempVerteces.push_back(v);
+                    }
+                }
+                Station s1 = e.getOrig()->getStation();
+                Station s2 = e.getDest()->getStation();
+                trainNetwork.addBidirectionalEdge(s1,s2,e.getWeight(),e.getService());
+                sort(tempVerteces.begin(),tempVerteces.end(),[](Vertex* a , Vertex* b){ return a->getIndegree()>b->getIndegree();});
+                cout << "The stations that were most affected from removing segment between stations "<< e.getOrig()->getStation().getName() << " and " << e.getDest()->getStation().getName() << " are:\n";
+                for (int i = 0 ; (i < k) && (i <tempVerteces.size());i++){
+                   cout << "- " << tempVerteces[i]->getStation().getName() << "\n";
+                }
+                cout << "\n";
+            }
+            for (Edge& e : deletedEdges){
+                trainNetwork.removeBidirectionalEdge(e.getOrig(),e.getDest());
+            }
         }
         else if (choice == "4"){
-            for (Edge* e : deletedEdges){
-                Station s1 = e->getOrig()->getStation();
-                Station s2 = e->getDest()->getStation();
-                trainNetwork.addBidirectionalEdge(s1,s2,e->getWeight(),e->getService());
-                delete e;
+            for (Edge& e : deletedEdges){
+                Station s1 = e.getOrig()->getStation();
+                Station s2 = e.getDest()->getStation();
+                trainNetwork.addBidirectionalEdge(s1,s2,e.getWeight(),e.getService());
             }
             return;
         }
@@ -233,6 +283,8 @@ string TrainManager::getAnswer() {
     return answer;
 }
 
+
+
 void TrainManager::calculateMaxFlowFromNetworkToSingleStation() {
     cout << "What is the name of the station?\n";
     Vertex* v = getStationFromUser();
@@ -241,29 +293,9 @@ void TrainManager::calculateMaxFlowFromNetworkToSingleStation() {
         return;
     }
 
-    vector<Vertex*> leafNodes ;
-    trainNetwork.BFS(v,leafNodes);
-
-
-    auto newNode = new Vertex(Station("temp","p","","",""));
-    for (Vertex* node : leafNodes){
-        Edge* edge = newNode->addEdge(node,INF,"No service");
-        edge->setFlow(0);
-        cout << "One leaf node is : " << node->getStation().getName()<<"!\n";
-    }
-    int test = 0;
-    for(Edge* e : newNode->getAdj()){
-        test++;
-    }
-    cout << "so we have "<< test << " adjacent edges to the new node\n";
-    unsigned int p = trainNetwork.edmondsKarp(newNode,v);
+    unsigned int p = getMaxFlowToSingleStation(v);
     cout << "The maximum number of trains that can simultaneously arrive at station "<< v->getStation().getName()<<
         " is " << p << "!\n";
-
-    for (Edge* e : newNode->getAdj()){
-        newNode->removeEdge(e->getDest()->getStation());
-    }
-    delete newNode;
 
 
     //this part is for comparison, meaning its temporary
@@ -273,6 +305,27 @@ void TrainManager::calculateMaxFlowFromNetworkToSingleStation() {
     }
     cout << "For comparison, this is the sum of the capacity of every adjacent segment to station "<<
         v->getStation().getName()<< ": " << comparison << ".\n";
+}
+
+unsigned long TrainManager::getMaxFlowToSingleStation(Vertex * v) {
+    vector<Vertex*> leafNodes ;
+    trainNetwork.BFS(v,leafNodes);
+    if (leafNodes.empty()){
+        return 0;
+    }
+
+    Station newStation ("temp","p","","",leafNodes[0]->getStation().getLine());
+    trainNetwork.addVertex(newStation);
+
+    for (Vertex* node : leafNodes){
+        Station ml = node->getStation();
+        trainNetwork.addEdge(newStation,ml,INT_MAX,"NO SERVICE");
+    }
+
+    Vertex* newVertex = trainNetwork.findVertex(newStation);
+    unsigned long p = trainNetwork.edmondsKarp(newVertex,v);
+    trainNetwork.removeVertex(newStation);
+    return p;
 }
 
 

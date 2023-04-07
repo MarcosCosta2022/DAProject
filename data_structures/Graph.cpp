@@ -175,6 +175,7 @@ void Graph::augmentFlowAlongPath(Vertex *s, Vertex *t, double f) {
 }
 
 unsigned int Graph::edmondsKarp(Vertex* s , Vertex* t) {
+    if (s->getStation().getLine() != t->getStation().getLine()) return 0;
     for (auto v : vertexSet) {
         for (auto e: v->getAdj()) {
             e->setFlow(0);
@@ -193,16 +194,18 @@ unsigned int Graph::edmondsKarp(Vertex* s , Vertex* t) {
     return max_flow;
 }
 
-Edge* Graph::removeBidirectionalEdge(Vertex *s, Vertex *t) {
+pair<bool,Edge> Graph::removeBidirectionalEdge(Vertex *s, Vertex *t) {
     Edge* res = nullptr;
     for (Edge* e : s->getAdj()){
         if (e->getDest() == t){
-            res = new Edge(*e);
+            res = e;
         }
     }
-    if (res == nullptr) return nullptr;
-    if (s->removeEdge(t->getStation()) && t->removeEdge(s->getStation())) return res;
-    else return nullptr;
+    if (res == nullptr) return {false,{nullptr,nullptr,0,""}};
+    Edge temp = *res;
+    if (s->removeEdge(t->getStation()) && t->removeEdge(s->getStation()))
+        return {true,temp};
+    else return {false,{nullptr,nullptr,0,""}};
 }
 void Graph::BFS(Vertex *n, vector<Vertex*>& v) {
     for (Vertex* l : vertexSet){
@@ -217,7 +220,7 @@ void Graph::BFS(Vertex *n, vector<Vertex*>& v) {
         bool check = true;
         for (Edge* e : p->getAdj()){
             Vertex* d = e->getDest();
-            if (!d->isVisited()){
+            if (!d->isVisited() && e->getService() == "STANDARD"){
                 d->setVisited(true);
                 check = false;
                 q.push(d);
@@ -228,3 +231,21 @@ void Graph::BFS(Vertex *n, vector<Vertex*>& v) {
         }
     }
 }
+
+bool Graph::removeVertex(Station& station2) {
+    bool c =false;
+    auto i = vertexSet.begin();
+    for (;i!=vertexSet.end();i++){
+        if ((*i)->getStation() == station2){
+            c = true;
+            break;
+        }
+    }
+    if (!c) return false;
+    auto moi = *i;
+    vertexSet.erase(i);
+    moi->removeAllEdges();
+    delete moi;
+    return true;
+}
+

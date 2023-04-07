@@ -27,7 +27,7 @@ public:
     void calculateMaxFlowWithMinimumCost();
     void useSubGraph();
 
-
+    unsigned long getMaxFlowToSingleStation(Vertex* v);
     string getAnswer();
     Vertex* getStationFromUser();
     pair<Vertex*,Vertex*> getStationsFromUser();
