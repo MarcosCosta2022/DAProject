@@ -15,42 +15,36 @@ TrainManager::TrainManager() {
     LoadNetworks();
 }
 
+string getNextString(istringstream& iss){
+    string res;
+    string temp;
+    getline(iss,temp,',');
+    res += temp;
+    if (temp.front() == '"' && temp.back() != '"'){
+        getline(iss,temp,'"');
+        res+= ',' + temp + '"';
+        iss.ignore(1);
+    }
+    return res;
+}
+
 void TrainManager::LoadStations() {
-    string n, d, m, t, l, line, as;
+    string name, district, municipality, township, line , s;
     ifstream in; in.open("../resources/stations.csv");
     if(!in) cerr << "Could not open the file!" << endl;
-    getline(in,line);
-    while(getline(in,line)) {
-        istringstream iss(line);
-        char delimiter = ',';
-        bool inside_quotes = false;
-        while (getline(iss, line, delimiter)) {
-            if (line.front() == '"' && line.back() != '"') {
-                inside_quotes = true;
-                n = line;
-                continue;
-            }
-            else if (line.front() != '"' && line.back() == '"') {
-                inside_quotes = false;
-                n += delimiter + line;
-                continue;
-            }
-            else if (inside_quotes) {
-                n += delimiter + line;
-                continue;
-            }
+    getline(in,s);
+    while(getline(in,s)) {
+        istringstream iss(s);
+        name = getNextString(iss);
+        district = getNextString(iss);
+        municipality = getNextString(iss);
+        township = getNextString(iss);
+        line = getNextString(iss);
 
-            if (n.empty()) n = line;
-            else if (d.empty()) d = line;
-            else if (m.empty()) m = line;
-            else if (t.empty()) t = line;
-            else if (l.empty()) l = line;
-        }
-
-        Station a = Station(n,d,m,t,l);
-        auto it = stations.find(n);
+        Station a = Station(name,district,municipality,township,line);
+        auto it = stations.find(name);
         if(it==stations.end()){
-            stations.emplace(n,a);
+            stations.emplace(name,a);
             trainNetwork.addVertex(a);
         }
     }
