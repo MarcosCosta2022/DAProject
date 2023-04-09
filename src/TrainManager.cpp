@@ -49,6 +49,7 @@ void TrainManager::LoadStations() {
         }
     }
 }
+
 void TrainManager::LoadNetworks() {
     int cap;
     string sA, sB, serv, line;
@@ -70,7 +71,6 @@ void TrainManager::LoadNetworks() {
         }
     }
 }
-
 
 void TrainManager::stations_most_amount_trains() {
     unsigned long max = 0;
@@ -99,6 +99,7 @@ void TrainManager::stations_most_amount_trains() {
         cout << p.first->getStation().getName() << " and " << p.second->getStation().getName() << '\n';
     }
 }
+
 void TrainManager::maxFlowOfTrains() {
     auto stations_input = getStationsFromUser();
     Vertex* s = stations_input.first;
