@@ -49,6 +49,7 @@ void TrainManager::LoadStations() {
         }
     }
 }
+
 void TrainManager::LoadNetworks() {
     int cap;
     string sA, sB, serv, line;
@@ -70,7 +71,6 @@ void TrainManager::LoadNetworks() {
         }
     }
 }
-
 
 void TrainManager::stations_most_amount_trains() {
     unsigned long max = 0;
@@ -164,6 +164,7 @@ void TrainManager::top_districts() {
         i++;
     }
 }
+
 void TrainManager::maxFlowOfTrains() {
     auto stations_input = getStationsFromUser();
     Vertex* s = stations_input.first;
