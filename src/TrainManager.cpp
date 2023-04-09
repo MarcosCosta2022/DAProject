@@ -15,42 +15,36 @@ TrainManager::TrainManager() {
     LoadNetworks();
 }
 
+string getNextString(istringstream& iss){
+    string res;
+    string temp;
+    getline(iss,temp,',');
+    res += temp;
+    if (temp.front() == '"' && temp.back() != '"'){
+        getline(iss,temp,'"');
+        res+= ',' + temp + '"';
+        iss.ignore(1);
+    }
+    return res;
+}
+
 void TrainManager::LoadStations() {
-    string n, d, m, t, l, line, as;
+    string name, district, municipality, township, line , s;
     ifstream in; in.open("../resources/stations.csv");
     if(!in) cerr << "Could not open the file!" << endl;
-    getline(in,line);
-    while(getline(in,line)) {
-        istringstream iss(line);
-        char delimiter = ',';
-        bool inside_quotes = false;
-        while (getline(iss, line, delimiter)) {
-            if (line.front() == '"' && line.back() != '"') {
-                inside_quotes = true;
-                n = line;
-                continue;
-            }
-            else if (line.front() != '"' && line.back() == '"') {
-                inside_quotes = false;
-                n += delimiter + line;
-                continue;
-            }
-            else if (inside_quotes) {
-                n += delimiter + line;
-                continue;
-            }
+    getline(in,s);
+    while(getline(in,s)) {
+        istringstream iss(s);
+        name = getNextString(iss);
+        district = getNextString(iss);
+        municipality = getNextString(iss);
+        township = getNextString(iss);
+        line = getNextString(iss);
 
-            if (n.empty()) n = line;
-            else if (d.empty()) d = line;
-            else if (m.empty()) m = line;
-            else if (t.empty()) t = line;
-            else if (l.empty()) l = line;
-        }
-
-        Station a = Station(n,d,m,t,l);
-        auto it = stations.find(n);
+        Station a = Station(name,district,municipality,township,line);
+        auto it = stations.find(name);
         if(it==stations.end()){
-            stations.emplace(n,a);
+            stations.emplace(name,a);
             trainNetwork.addVertex(a);
         }
     }
@@ -105,6 +99,71 @@ void TrainManager::stations_most_amount_trains() {
         cout << p.first->getStation().getName() << " and " << p.second->getStation().getName() << '\n';
     }
 }
+// Custom comparator function that sorts the map by its value
+template<typename K, typename V>
+struct value_comparator {
+    bool operator()(const pair<K, V>& a, const pair<K, V>& b) const {
+        return a.second > b.second;
+    }
+};
+
+void TrainManager::top_municipalities() {
+    cout << "How many municipalities you want?";
+    int k;
+    cin >> k;
+    for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
+        auto it = top_mun.find(trainNetwork.getVertexSet()[i]->getStation().getMunicipality());
+        if (it != top_mun.end()) top_mun.emplace(trainNetwork.getVertexSet()[i]->getStation().getMunicipality(), 0);
+    }
+    if (top_mun.empty()){
+        cout << "Calculating...\n";
+        for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
+            for (int j = i+1; j < trainNetwork.getNumVertex(); j++) {
+                unsigned long temp = trainNetwork.edmondsKarp(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+                top_mun[trainNetwork.getVertexSet()[i]->getStation().getMunicipality()] += temp;
+                top_mun[trainNetwork.getVertexSet()[j]->getStation().getMunicipality()] += temp;
+            }
+        }
+    }
+    vector<pair<string,unsigned long>> v(top_mun.begin(),top_mun.end());
+    sort(v.begin(), v.end(), value_comparator<string,unsigned long>());
+    cout<<"The top-" << k << " municipalities are: \n";
+    int i = 0;
+    while(k>0) {
+        cout << v[i].first << ";\n";
+        k--;
+        i++;
+    }
+}
+
+void TrainManager::top_districts() {
+    cout << "How many municipalities you want?";
+    int k;
+    cin >> k;
+    for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
+        auto it = top_dis.find(trainNetwork.getVertexSet()[i]->getStation().getMunicipality());
+        if (it != top_dis.end()) top_dis.emplace(trainNetwork.getVertexSet()[i]->getStation().getDistrict(), 0);
+    }
+    if (top_dis.empty()){
+        cout << "Calculating...\n";
+        for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
+            for (int j = i+1; j < trainNetwork.getNumVertex(); j++) {
+                unsigned long temp = trainNetwork.edmondsKarp(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
+                top_dis[trainNetwork.getVertexSet()[i]->getStation().getDistrict()] += temp;
+                top_dis[trainNetwork.getVertexSet()[j]->getStation().getDistrict()] += temp;
+            }
+        }
+    }
+    vector<pair<string,unsigned long>> v(top_dis.begin(),top_dis.end());
+    sort(v.begin(), v.end(), value_comparator<string,unsigned long>());
+    cout<<"The top-" << k << " districts are: \n";
+    int i = 0;
+    while(k>0) {
+        cout << v[i].first << ";\n";
+        k--;
+        i++;
+    }
+}
 void TrainManager::maxFlowOfTrains() {
     auto stations_input = getStationsFromUser();
     Vertex* s = stations_input.first;
@@ -155,23 +214,7 @@ void TrainManager::calculateMaxFlowWithMinimumCost() {
             e->setFlow(0);
         }
     }
-    vector<pair<double,double>> values;
-    double maxf = 0;
-    // Loop to find augmentation paths
-    while( trainNetwork.findAugmentingPath(s, t) ) {
-        pair<double,double> c = trainNetwork.findMinResidualAlongPath2(s,t);
-        trainNetwork.augmentFlowAlongPath(s, t,c.first);
-        if(maxf < c.first) {
-            maxf = c.first;
-            values.clear();
-            values.push_back(c);
-        }
-        if(maxf == c.first) values.push_back(c);
-    }
-
-    for(int i = 0; i<values.size();i++) {
-        cout << values[i].first << ' ' << values[i].second << '\n';
-    }
+    //não sei mesmo oq fazer
 }
 
 void TrainManager::useSubGraph() {

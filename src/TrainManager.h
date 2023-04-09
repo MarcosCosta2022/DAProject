@@ -6,6 +6,7 @@
 #define PROJECT_TRAINMANAGER_H
 
 #include <unordered_map>
+#include <map>
 #include "../data_structures/Graph.h"
 
 class MyHashFunction {
@@ -26,6 +27,8 @@ public:
     void stations_most_amount_trains();
     void calculateMaxFlowWithMinimumCost();
     void useSubGraph();
+    void top_municipalities();
+    void top_districts();
 
     unsigned long getMaxFlowToSingleStation(Vertex* v);
     string getAnswer();
@@ -36,6 +39,8 @@ private:
     unordered_map<std::string,Station> stations; // if these will only be used one time, its better to create them in the function they are used
     unordered_map<Network,double,MyHashFunction> networks;
     vector<pair<Vertex*,Vertex*>> pairsOfStationsWithBiggestMaxFlow;
+    map<std::string,unsigned long> top_mun;
+    map<std::string, unsigned long> top_dis;
 
 
 };

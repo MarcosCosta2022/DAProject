@@ -4,6 +4,7 @@
 using namespace std;
 int main() {
     TrainManager h;
+    string check;
     while(true){
         cout << "=============================================================\n"
                 <<"| What do you want to do?                                   |\n"
@@ -12,7 +13,7 @@ int main() {
                 <<"|    between two given stations.                            |\n"
                 <<"| 3- Calculate the pair of stations which require the most  |\n"
                 <<"|    amount of trains.                                      |\n"
-                <<"| 4- Top-k municipalities with more transportation needs.   |\n"
+                <<"| 4- Top-k municipalities/districts with more transportation needs.   |\n"
                 <<"| 5- Maximum number of trains that can simultaneously arrive|\n"
                 <<"|    at a given station.                                    |\n"
                 <<"| 6- Calculate the maximum amount of trains that can        |\n"
@@ -35,6 +36,16 @@ int main() {
                 break;
             case 2: h.maxFlowOfTrains();break;
             case 3: h.stations_most_amount_trains(); break;
+            case 4:
+                cout << "Do you want to see the municipalities or the districts? ";
+                cin >> check;
+                if(check == "municipalities"){
+                    h.top_municipalities();
+                }
+                else if(check == "districts"){
+                    h.top_districts();
+                }
+                break;
             case 5: h.calculateMaxFlowFromNetworkToSingleStation(); break;
             case 6: h.calculateMaxFlowWithMinimumCost();break;
             case 7: h.useSubGraph();break;
