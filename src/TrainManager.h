@@ -85,7 +85,21 @@ public:
      * The worst-case time complexity of this function is O(N*M*log(N)), where N is the number of vertices in the graph and M is the number of edges in the graph. This is because the function performs operations such as removing edges from the graph, calculating maximum flow, and sorting vertices, all of which have time complexity proportional to N and M.
      */
     void useSubGraph();
+    /**
+     * This function calculates and prints the top-k municipalities with the highest number of passengers traveling through them.
+     * It uses the Edmonds-Karp algorithm to calculate the maximum flow between each pair of stations in the network,
+     * and then aggregates the flow for each municipality. Finally, it sorts the municipalities by their total flow in decreasing order and prints the top-k results.
+     * Time complexity: O(|V|^2 * E * log E), where |V| is the number of vertices in the graph, and E is the number of edges in the graph.
+     */
     void top_municipalities();
+    /**
+     * Calculates the top k districts with the highest number of passengers transported between them.
+     * This method prompts the user to input the number of top districts to calculate.
+     * It then iterates over all stations in the network and adds their district to a map if it doesn't already exist.
+     * It then calculates the maximum flow between each pair of stations in the network and accumulates the flow in the corresponding district's value in the map.
+     * Finally, it sorts the districts in decreasing order by their accumulated flow and prints the top k districts with their respective flow values.
+     * Time complexity: O(V^2 E log E) where V is the number of vertices in the network and E is the number of edges.
+     */
     void top_districts();
 
     /**
