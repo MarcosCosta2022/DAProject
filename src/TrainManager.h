@@ -117,7 +117,7 @@ public:
     pair<Vertex*,Vertex*> getStationsFromUser();
 private:
     Graph trainNetwork;
-    unordered_map<std::string,Station> stations; // if these will only be used one time, its better to create them in the function they are used
+    unordered_map<std::string,Station> stations; 
     unordered_map<Network,double,MyHashFunction> networks;
     vector<pair<Vertex*,Vertex*>> pairsOfStationsWithBiggestMaxFlow;
     map<std::string,unsigned long> top_mun;

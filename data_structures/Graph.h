@@ -13,9 +13,7 @@
 class Graph {
 public:
     ~Graph();
-    /*
-    * Auxiliary function to find a vertex with a given ID.
-    */
+
     Vertex *findVertex(Station &station2) const;
 
     Vertex* findVertexByName(const string& name) const;
@@ -110,7 +108,6 @@ public:
     void prims(Vertex* s);
     unsigned long maxFlowAfterPrim(Vertex* s , Vertex*t);
 
-    pair<double, double> findMinResidualAlongPath2(Vertex *s, Vertex *t);
 
 
 protected:

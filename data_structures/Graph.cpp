@@ -1,3 +1,4 @@
+#include <climits>
 #include "Graph.h"
 
 int Graph::getNumVertex() const {
@@ -8,9 +9,7 @@ std::vector<Vertex *> Graph::getVertexSet() const {
     return vertexSet;
 }
 
-/*
- * Auxiliary function to find a vertex with a given content.
- */
+
 Vertex * Graph::findVertex(Station &station2) const {
     for (auto v : vertexSet)
         if (v->getStation() == station2)
@@ -18,21 +17,6 @@ Vertex * Graph::findVertex(Station &station2) const {
     return nullptr;
 }
 
-/*
- * Finds the index of the vertex with a given content.
- */
-/*
-int Graph::findVertexIdx(co &station2) const {
-    for (unsigned i = 0; i < vertexSet.size(); i++)
-        if (vertexSet[i]->getStation() == station2)
-            return i;
-    return -1;
-}
-*/
-/*
- *  Adds a vertex with a given content or info (in) to a graph (this).
- *  Returns true if successful, and false if a vertex with that content already exists.
- */
 bool Graph::addVertex(Station &station2) {
     if (findVertex(station2) != nullptr)
         return false;
@@ -40,11 +24,6 @@ bool Graph::addVertex(Station &station2) {
     return true;
 }
 
-/*
- * Adds an edge to a graph (this), given the contents of the source and
- * destination vertices and the edge weight (w).
- * Returns true if successful, and false if the source or destination vertex does not exist.
- */
 bool Graph::addEdge(Station &sourc, Station &dest, int w , const string& service) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
@@ -229,29 +208,6 @@ bool Graph::removeVertex(Station& station2) {
     delete moi;
     return true;
 }
-pair<double,double> Graph::findMinResidualAlongPath2(Vertex *s, Vertex *t) {
-    double f = INF;
-    double c = 0;
-    for (auto v = t; v != s; ) {
-        auto e = v->getPath();
-        if (e->getDest() == v) {
-            f = std::min(f, e->getWeight() - e->getFlow());
-            v = e->getOrig();
-            if(e->getService() == "STANDARD") c+=2;
-            else if(e->getService() == "ALFA PENDULAR") c+=4;
-        }
-        else {
-            f = std::min(f, e->getFlow());
-            v = e->getDest();
-            if(e->getService() == "STANDARD") c+=2;
-            else if(e->getService() == "ALFA PENDULAR") c+=4;
-        }
-    }
-    return make_pair(f,c);
-}
-
-
-
 
 void Graph::prims(Vertex *s) {
     auto compare = [](const Vertex* a , const Vertex* b)
