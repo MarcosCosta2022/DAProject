@@ -225,6 +225,7 @@ void TrainManager::calculateMaxFlowWithMinimumCost() {
         cout << "Invalid station!\n";
         return;
     }
+    /*
     for (auto v : trainNetwork.getVertexSet()) {
         for (auto e: v->getAdj()) {
             e->setFlow(0);
@@ -249,8 +250,10 @@ void TrainManager::calculateMaxFlowWithMinimumCost() {
         }
         if(maxf == c.first) values.push_back(c);
     }
-    sort(values.begin(), values.end(), value_comparator2<double,double>());
-    cout << "A maximum flow of " << values[0].first << " with a cost of " << values[0].second << '\n';
+     */
+
+    auto res = trainNetwork.maxFlowAfterPrim(s,t);
+    cout << "The maximum amount of trains which can go from station " << s->getStation().getName() << " and " << t->getStation().getName() << " is "<<res <<".\n";
 }
 
 void TrainManager::useSubGraph() {

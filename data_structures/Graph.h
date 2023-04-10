@@ -106,6 +106,10 @@ public:
      * @param v Empty vector which will contain the leaf nodes upon exiting
      */
     void BFS(Vertex *n, vector<Vertex*>& v);
+
+    void prims(Vertex* s);
+    unsigned long maxFlowAfterPrim(Vertex* s , Vertex*t);
+
     pair<double, double> findMinResidualAlongPath2(Vertex *s, Vertex *t);
 
 
