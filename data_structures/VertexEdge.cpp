@@ -6,10 +6,7 @@
 
 Vertex::Vertex(Station station1): station(station1) {}
 
-/*
- * Auxiliary function to add an outgoing edge to a vertex (this),
- * with a given destination vertex (d) and edge weight (w).
- */
+
 Edge * Vertex::addEdge(Vertex *d,int w, const string& service) {
     auto newEdge = new Edge(this, d, w,service);
     adj.push_back(newEdge);
@@ -17,12 +14,6 @@ Edge * Vertex::addEdge(Vertex *d,int w, const string& service) {
     return newEdge;
 }
 
-
-/*
- * Auxiliary function to remove an outgoing edge (with a given destination (d))
- * from a vertex (this).
- * Returns true if successful, and false if such edge does not exist.
- */
 bool Vertex::removeEdge(Station destStation) {
     bool removedEdge = false;
     auto it = adj.begin();
@@ -31,7 +22,6 @@ bool Vertex::removeEdge(Station destStation) {
         Vertex *dest = edge->getDest();
         if (dest->getStation() == destStation) {
             it = adj.erase(it);
-            // Also remove the corresponding edge from the incoming list
             auto it2 = dest->incoming.begin();
             while (it2 != dest->incoming.end()) {
                 if ((*it2)->getOrig()->getStation() == station) {
@@ -42,7 +32,7 @@ bool Vertex::removeEdge(Station destStation) {
                 }
             }
             delete edge;
-            removedEdge = true; // allows for multiple edges to connect the same pair of vertices (multigraph)
+            removedEdge = true;
         }
         else {
             it++;

@@ -1,0 +1,4 @@
+## MENU EXPLANATION
+In the menu you can see all the functionalities but there are a few things you need to know in order to get all the information you want from our program. When it is asked the user to choose a station you should write the name correctly, for example, "Porto Campanhã", otherwise it will show the following message "Invalid Station!".
+Besides that, if you want to check the top-k municipalities/districts with more transportation needs, when it is asked the user to choose between municipalities or districts, the user should write "municipalities" or "districts" in order to get the correct information.
+Regarding the other functionalities, the user just selects from the menu what he wants and there should be no problem/errors.

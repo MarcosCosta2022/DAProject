@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['operator_3d_3d_0',['operator==',['../class_network.html#a832cb01e4783dda2f95e31a4a5241e83',1,'Network']]]
+  ['maxflowoftrains_0',['maxFlowOfTrains',['../class_train_manager.html#a715740096109b38f706f1e24590c78ce',1,'TrainManager']]],
+  ['myhashfunction_1',['MyHashFunction',['../class_my_hash_function.html',1,'']]]
 ];

@@ -18,7 +18,7 @@ class Edge;
 class Vertex {
 public:
     Vertex(Station station1);
-    bool operator<(Vertex & vertex) const; // // required by MutablePriorityQueue
+    bool operator<(Vertex & vertex) const;
 
     Station getStation() const;
     std::vector<Edge *> getAdj() const;
@@ -38,21 +38,19 @@ public:
     Edge * addEdge(Vertex *dest, int  w, const string& service);
     bool removeEdge(Station destStation);
     void removeAllEdges();
-    //friend class MutablePriorityQueue<Vertex>;
 protected:
-    Station station;                // identifier
-    std::vector<Edge *> adj;  // outgoing edges
+    Station station;
+    std::vector<Edge *> adj;
 
-    // auxiliary fields
-    bool visited = false; // used by DFS, BFS, Prim ...
-    bool processing = false; // used by isDAG (in addition to the visited attribute)
-    unsigned int indegree; // used by topsort and to know the diff a segment failure causes on the network
+    bool visited = false;
+    bool processing = false;
+    unsigned int indegree;
     double dist = 0;
     Edge *path = nullptr;
 
-    std::vector<Edge *> incoming; // incoming edges
+    std::vector<Edge *> incoming;
 
-    int queueIndex = 0; 		// required by MutablePriorityQueue and UFDS
+    int queueIndex = 0;
 };
 
 /********************** Edge  ****************************/
