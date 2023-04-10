@@ -251,7 +251,6 @@ void TrainManager::calculateMaxFlowWithMinimumCost() {
         if(maxf == c.first) values.push_back(c);
     }
      */
-
     auto res = trainNetwork.maxFlowAfterPrim(s,t);
     cout << "The maximum amount of trains which can go from station " << s->getStation().getName() << " and " << t->getStation().getName() << " is "<<res <<".\n";
 }

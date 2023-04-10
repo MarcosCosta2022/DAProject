@@ -252,17 +252,20 @@ pair<double,double> Graph::findMinResidualAlongPath2(Vertex *s, Vertex *t) {
 
 
 
+bool compare(const Vertex* a , const Vertex* b){
+    return a->getDist() > b->getDist();
+}
 
 void Graph::prims(Vertex *s) {
-    auto compare = [](const Vertex* a , const Vertex* b)
-    { return a->getDist() > b->getDist();};
-    std::priority_queue<Vertex*,std::vector<Vertex*>, decltype(compare)> p(compare);
+    std::priority_queue<Vertex*, std::vector<Vertex*>, decltype(&compare)> p(&compare);
     for (Vertex* v : vertexSet){
         v->setPath(nullptr);
         v->setVisited(false);
         v->setDist(INF);
+        p.push(v);
     }
     s->setDist(0);
+    p.push(s);
     while(!p.empty()){
         Vertex* node = p.top();
         p.pop();
@@ -273,13 +276,16 @@ void Graph::prims(Vertex *s) {
             if (!d->isVisited() && d->getDist() > temp){
                 d->setDist(temp);
                 d->setPath(e);
+                p.push(d);
             }
         }
     }
 }
 
 unsigned long Graph::maxFlowAfterPrim(Vertex *s, Vertex *t) {
+    if (s->getStation().getLine() != t->getStation().getLine())return 0;
     prims(s);
+    if (t->getPath() == nullptr) return 0;
     unsigned long maximum_flow = INT_MAX;
     Vertex* temp = t;
     while(temp != s){
