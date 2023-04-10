@@ -38,9 +38,9 @@ public:
      * Loads the train network connections from the "network.csv" file and creates a bidirectional edge
      * between the two stations, using the capacity and service as edge weights.
      * O(n * log n), where n is the number of network connections in the file. This is
-     *              because we are inserting each connection into a map, which has a logarithmic time
-     *              complexity for insertions. Since we are doing this n times, the overall time
-     *              complexity is O(n * log n).
+     * because we are inserting each connection into a map, which has a logarithmic time
+     * complexity for insertions. Since we are doing this n times, the overall time
+     * complexity is O(n * log n).
      */
     void LoadNetworks();
     /**

@@ -106,6 +106,9 @@ public:
      * @param v Empty vector which will contain the leaf nodes upon exiting
      */
     void BFS(Vertex *n, vector<Vertex*>& v);
+
+    void prims(Vertex* s);
+    unsigned long maxFlowAfterPrim(Vertex* s , Vertex*t);
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
 

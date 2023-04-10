@@ -230,3 +230,44 @@ bool Graph::removeVertex(Station& station2) {
     return true;
 }
 
+
+
+void Graph::prims(Vertex *s) {
+    auto compare = [](const Vertex* a , const Vertex* b)
+    { return a->getDist() > b->getDist();};
+    std::priority_queue<Vertex*,std::vector<Vertex*>, decltype(compare)> p(compare);
+    for (Vertex* v : vertexSet){
+        v->setPath(nullptr);
+        v->setVisited(false);
+        v->setDist(INF);
+    }
+    s->setDist(0);
+    while(!p.empty()){
+        Vertex* node = p.top();
+        p.pop();
+        node->setVisited(true);
+        for (Edge* e : node->getAdj()){
+            Vertex* d = e->getDest();
+            double temp = e->getService() == "STANDARD" ? 2*e->getWeight():4*e->getWeight();
+            if (!d->isVisited() && d->getDist() > temp){
+                d->setDist(temp);
+                d->setPath(e);
+            }
+        }
+    }
+}
+
+unsigned long Graph::maxFlowAfterPrim(Vertex *s, Vertex *t) {
+    prims(s);
+    unsigned long maximum_flow = INT_MAX;
+    Vertex* temp = t;
+    while(temp != s){
+        Edge* p = temp->getPath();
+        temp = p->getOrig();
+        if (p->getWeight()<maximum_flow){
+            maximum_flow = p->getWeight();
+        }
+    }
+    return maximum_flow;
+}
+
