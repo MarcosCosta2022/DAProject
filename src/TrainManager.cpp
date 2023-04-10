@@ -35,11 +35,19 @@ void TrainManager::LoadStations() {
     getline(in,s);
     while(getline(in,s)) {
         istringstream iss(s);
-        name = getNextString(iss);
-        district = getNextString(iss);
-        municipality = getNextString(iss);
-        township = getNextString(iss);
-        line = getNextString(iss);
+
+        getline(iss, name, ',');
+        getline(iss, district, ',');
+        getline(iss, municipality, ',');
+
+        if (iss.peek() == '"') {
+            getline(iss, township, '"');
+            getline(iss, township, '"');
+        } else {
+            getline(iss, township, ',');
+        }
+        getline(iss, line, ',');
+        getline(iss, line, '\n');
 
         Station a = Station(name,district,municipality,township,line);
         auto it = stations.find(name);
@@ -48,6 +56,8 @@ void TrainManager::LoadStations() {
             trainNetwork.addVertex(a);
         }
     }
+    auto it = stations.find("Fuentes de Onõro");
+    auto it2 = stations.find("Badajoz");
 }
 
 void TrainManager::LoadNetworks() {
@@ -199,6 +209,13 @@ Vertex *TrainManager::getStationFromUser() {
     Vertex* station = trainNetwork.findVertexByName(name);
     return station;
 }
+template<typename K, typename V>
+struct value_comparator2 {
+    bool operator()(const pair<K, V>& a, const pair<K, V>& b) const {
+        if(a.second==b.second) a.first < b.first;
+        return a.second > b.second;
+    }
+};
 
 void TrainManager::calculateMaxFlowWithMinimumCost() {
     auto stations_input = getStationsFromUser();
@@ -208,12 +225,35 @@ void TrainManager::calculateMaxFlowWithMinimumCost() {
         cout << "Invalid station!\n";
         return;
     }
+    /*
     for (auto v : trainNetwork.getVertexSet()) {
         for (auto e: v->getAdj()) {
             e->setFlow(0);
         }
     }
-    //não sei mesmo oq fazer
+
+    for (auto v : trainNetwork.getVertexSet()) {
+        for (auto e: v->getAdj()) {
+            e->setFlow(0);
+        }
+    }
+    vector<pair<double,double>> values;
+    double maxf = 0;
+    // Loop to find augmentation paths
+    while( trainNetwork.findAugmentingPath(s, t) ) {
+        pair<double,double> c = trainNetwork.findMinResidualAlongPath2(s,t);
+        trainNetwork.augmentFlowAlongPath(s, t,c.first);
+        if(maxf < c.first) {
+            maxf = c.first;
+            values.clear();
+            values.push_back(c);
+        }
+        if(maxf == c.first) values.push_back(c);
+    }
+     */
+
+    auto res = trainNetwork.maxFlowAfterPrim(s,t);
+    cout << "The maximum amount of trains which can go from station " << s->getStation().getName() << " and " << t->getStation().getName() << " is "<<res <<".\n";
 }
 
 void TrainManager::useSubGraph() {
