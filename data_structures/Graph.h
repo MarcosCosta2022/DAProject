@@ -111,11 +111,7 @@ public:
 
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
-    vector<vector<int>> residual; // residual graph with available capacity on each edge
-    vector<vector<int>> cost; // edge weights
-    vector<int> parent; // parent of each node in the shortest path
-    vector<int> dist; // shortest distance to each node
-    vector<int> flow; // flow along the shortest path
+
 
     double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall

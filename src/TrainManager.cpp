@@ -212,7 +212,7 @@ Vertex *TrainManager::getStationFromUser() {
 template<typename K, typename V>
 struct value_comparator2 {
     bool operator()(const pair<K, V>& a, const pair<K, V>& b) const {
-        if(a.second==b.second) a.first < b.first;
+        if(a.second==b.second) return a.first < b.first;
         return a.second > b.second;
     }
 };
