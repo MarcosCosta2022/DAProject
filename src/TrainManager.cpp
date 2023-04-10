@@ -111,12 +111,12 @@ void TrainManager::top_municipalities() {
     cout << "How many municipalities you want?";
     int k;
     cin >> k;
-    for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
-        auto it = top_mun.find(trainNetwork.getVertexSet()[i]->getStation().getMunicipality());
-        if (it != top_mun.end()) top_mun.emplace(trainNetwork.getVertexSet()[i]->getStation().getMunicipality(), 0);
-    }
     if (top_mun.empty()){
         cout << "Calculating...\n";
+        for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
+            auto it = top_mun.find(trainNetwork.getVertexSet()[i]->getStation().getMunicipality());
+            if (it != top_mun.end()) top_mun.emplace(trainNetwork.getVertexSet()[i]->getStation().getMunicipality(), 0);
+        }
         for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
             for (int j = i+1; j < trainNetwork.getNumVertex(); j++) {
                 unsigned long temp = trainNetwork.edmondsKarp(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
@@ -129,23 +129,22 @@ void TrainManager::top_municipalities() {
     sort(v.begin(), v.end(), value_comparator<string,unsigned long>());
     cout<<"The top-" << k << " municipalities are: \n";
     int i = 0;
-    while(k>0) {
-        cout << v[i].first << ";\n";
-        k--;
+    while(i<k && i < v.size()) {
+        cout << v[i].first << " with " << v[i].second<< ";\n";
         i++;
     }
 }
 
 void TrainManager::top_districts() {
-    cout << "How many municipalities you want?";
+    cout << "How many districts you want?";
     int k;
     cin >> k;
-    for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
-        auto it = top_dis.find(trainNetwork.getVertexSet()[i]->getStation().getMunicipality());
-        if (it != top_dis.end()) top_dis.emplace(trainNetwork.getVertexSet()[i]->getStation().getDistrict(), 0);
-    }
     if (top_dis.empty()){
         cout << "Calculating...\n";
+        for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
+            auto it = top_dis.find(trainNetwork.getVertexSet()[i]->getStation().getDistrict());
+            if (it != top_dis.end()) top_dis.emplace(trainNetwork.getVertexSet()[i]->getStation().getDistrict(), 0);
+        }
         for (int i = 0; i < trainNetwork.getNumVertex(); i++) {
             for (int j = i+1; j < trainNetwork.getNumVertex(); j++) {
                 unsigned long temp = trainNetwork.edmondsKarp(trainNetwork.getVertexSet()[i],trainNetwork.getVertexSet()[j]);
@@ -156,11 +155,10 @@ void TrainManager::top_districts() {
     }
     vector<pair<string,unsigned long>> v(top_dis.begin(),top_dis.end());
     sort(v.begin(), v.end(), value_comparator<string,unsigned long>());
-    cout<<"The top-" << k << " districts are: \n";
+    cout<<"The top " << k << " districts are: \n";
     int i = 0;
-    while(k>0) {
-        cout << v[i].first << ";\n";
-        k--;
+    while(i < k && i < v.size()-1) {
+        cout << v[i].first << " with " << v[i].second<< ";\n";
         i++;
     }
 }
