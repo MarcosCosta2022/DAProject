@@ -25,6 +25,11 @@ public:
      */
     bool addVertex(Station &station2);
 
+    /**
+     * Removes a vertex with a given content or info (station2) to a graph (this).
+     * @param station2 Vertex to remove from graph
+     * @return true if successful, and false if a vertex with that content doesn't exist.
+     */
     bool removeVertex(Station &station2);
 
     /**
@@ -37,9 +42,26 @@ public:
      * @return true if successful, and false if the source or destination vertex does not exist.
      */
     bool addEdge(Station &sourc, Station &dest, int w , const string& service);
+
+    /**
+     * Adds 2 edges to a graph (this), given the contents of the source and
+     * destination vertices, the edge weight (w) and the service(service).
+     * @param sourc Source station which the edge comes from
+     * @param dest  Destination vertex which the edge point to
+     * @param w Weight of the edge
+     * @param service Service provided by this segment of the train network
+     * @return true if successful, and false if the source or destination vertex does not exist.
+     */
     bool addBidirectionalEdge(Station &sourc, Station &dest, int  w , const string& service);
 
+    /**
+     * @return returns the number of vertices
+     */
     int getNumVertex() const;
+
+    /**
+     * @return returns a set with all vertices
+     */
     std::vector<Vertex *> getVertexSet() const;
 
     void testAndVisit(std::queue< Vertex*> &q, Edge *e, Vertex *w, double residual);
@@ -105,7 +127,18 @@ public:
      */
     void BFS(Vertex *n, vector<Vertex*>& v);
 
+    /**
+     * Performs the prims algorithm
+     * @param s Source vertex
+     */
     void prims(Vertex* s);
+
+    /**
+     * Finds the maximum flow after executing the prims algorithm
+     * @param s
+     * @param t
+     * @return
+     */
     unsigned long maxFlowAfterPrim(Vertex* s , Vertex*t);
 
 
