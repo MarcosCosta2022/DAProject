@@ -209,6 +209,13 @@ Vertex *TrainManager::getStationFromUser() {
     Vertex* station = trainNetwork.findVertexByName(name);
     return station;
 }
+template<typename K, typename V>
+struct value_comparator2 {
+    bool operator()(const pair<K, V>& a, const pair<K, V>& b) const {
+        if(a.second==b.second) a.first < b.first;
+        return a.second > b.second;
+    }
+};
 
 void TrainManager::calculateMaxFlowWithMinimumCost() {
     auto stations_input = getStationsFromUser();
@@ -223,7 +230,27 @@ void TrainManager::calculateMaxFlowWithMinimumCost() {
             e->setFlow(0);
         }
     }
-    //não sei mesmo oq fazer
+
+    for (auto v : trainNetwork.getVertexSet()) {
+        for (auto e: v->getAdj()) {
+            e->setFlow(0);
+        }
+    }
+    vector<pair<double,double>> values;
+    double maxf = 0;
+    // Loop to find augmentation paths
+    while( trainNetwork.findAugmentingPath(s, t) ) {
+        pair<double,double> c = trainNetwork.findMinResidualAlongPath2(s,t);
+        trainNetwork.augmentFlowAlongPath(s, t,c.first);
+        if(maxf < c.first) {
+            maxf = c.first;
+            values.clear();
+            values.push_back(c);
+        }
+        if(maxf == c.first) values.push_back(c);
+    }
+    sort(values.begin(), values.end(), value_comparator2<double,double>());
+    cout << "A maximum flow of " << values[0].first << " with a cost of " << values[0].second << '\n';
 }
 
 void TrainManager::useSubGraph() {
