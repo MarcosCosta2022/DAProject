@@ -35,11 +35,19 @@ void TrainManager::LoadStations() {
     getline(in,s);
     while(getline(in,s)) {
         istringstream iss(s);
-        name = getNextString(iss);
-        district = getNextString(iss);
-        municipality = getNextString(iss);
-        township = getNextString(iss);
-        line = getNextString(iss);
+
+        getline(iss, name, ',');
+        getline(iss, district, ',');
+        getline(iss, municipality, ',');
+
+        if (iss.peek() == '"') {
+            getline(iss, township, '"');
+            getline(iss, township, '"');
+        } else {
+            getline(iss, township, ',');
+        }
+        getline(iss, line, ',');
+        getline(iss, line, '\n');
 
         Station a = Station(name,district,municipality,township,line);
         auto it = stations.find(name);
@@ -48,6 +56,8 @@ void TrainManager::LoadStations() {
             trainNetwork.addVertex(a);
         }
     }
+    auto it = stations.find("Fuentes de Onõro");
+    auto it2 = stations.find("Badajoz");
 }
 
 void TrainManager::LoadNetworks() {
