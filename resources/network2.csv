@@ -2,4 +2,11 @@ Station_A,Station_B,Capacity,Service
 Porto Campanhã,Lisboa Oriente,10,STANDARD
 Lisboa Oriente,Pombal,5,STANDARD
 Lisboa Oriente,Pombal,5,ALFA PENDULAR
-
+Vila Nova de Gaia-Devesas,Pombal,10,STANDARD
+Vila Nova da Raínha,Pombal,2,STANDARD
+Estarreja,Vila Nova da Raínha,10,STANDARD
+São Pedro da Torre,Darque,20,STANDARD
+Darque,Carreço,20,STANDARD
+Carreço,Afife,20,STANDARD
+Afife,Senhora das Neves,15,STANDARD
+São Pedro da Torre,Senhora das Neves,30,ALFA PENDULAR
