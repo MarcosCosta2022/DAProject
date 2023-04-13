@@ -17,7 +17,7 @@ TrainManager::TrainManager() {
 
 void TrainManager::LoadStations() {
     string name, district, municipality, township, line , s;
-    ifstream in; in.open("../resources/stations.csv");
+    ifstream in; in.open("../resources/stations2.csv");
     if(!in) cerr << "Could not open the file!" << endl;
     getline(in,s);
     while(getline(in,s)) {
@@ -49,7 +49,7 @@ void TrainManager::LoadNetworks() {
     int cap;
     string sA, sB, serv, line;
     double w = 0;
-    ifstream in; in.open("../resources/network.csv");
+    ifstream in; in.open("../resources/network2.csv");
     if(!in) cerr << "Could not open the file! " << endl;
     getline(in, line);
     while(getline(in,line)) {
@@ -152,7 +152,7 @@ void TrainManager::top_districts() {
     sort(v.begin(), v.end(), value_comparator<string,unsigned long>());
     cout<<"The top " << k << " districts are: \n";
     int i = 0;
-    while(i < k && i < v.size()-1) {
+    while(i < k && i < v.size()) {
         cout << v[i].first << " with " << v[i].second<< ";\n";
         i++;
     }
@@ -269,6 +269,7 @@ void TrainManager::useSubGraph() {
             }
             vector<Vertex*> tempVerteces;
             for (Edge& e : deletedEdges){
+                tempVerteces.clear();
                 for (Vertex* v : trainNetwork.getVertexSet()){
                     if (v->getStation().getLine() == e.getOrig()->getStation().getLine()){
                         auto p = getMaxFlowToSingleStation(v);
