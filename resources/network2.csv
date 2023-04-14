@@ -1,5 +1,4 @@
 Station_A,Station_B,Capacity,Service
 Porto Campanhã,Lisboa Oriente,10,STANDARD
-Lisboa Oriente,Pombal,5,STANDARD
 Lisboa Oriente,Pombal,5,ALFA PENDULAR
-
+Pombal,Porto Campanhã,6,STANDARD
