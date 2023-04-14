@@ -210,10 +210,11 @@ bool Graph::removeVertex(Station& station2) {
 }
 
 bool compare(const Vertex* a , const Vertex* b){
-    return a->getDist() > b->getDist();
+    return a->getDist()> b->getDist();
 }
 
 void Graph::prims(Vertex *s) {
+
     std::priority_queue<Vertex*, std::vector<Vertex*>, decltype(&compare)> p(&compare);
     for (Vertex* v : vertexSet){
         v->setPath(nullptr);
