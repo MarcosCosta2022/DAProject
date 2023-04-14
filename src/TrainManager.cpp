@@ -89,7 +89,7 @@ void TrainManager::stations_most_amount_trains() {
             }
         }
     }
-    cout << "The greatest maximum number of trains between stations is "<< max << " and the pairs of stations are:\n";
+    cout << "The greatest maximum number of trains that can travel simultaneously between stations is "<< max << " and the pairs of stations are:\n";
     for (auto& p : res){
         cout << p.first->getStation().getName() << " and " << p.second->getStation().getName() << '\n';
     }

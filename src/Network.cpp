@@ -17,8 +17,7 @@ const string &Network::getService() const {return service;}
 void Network::setService(const string &service) {this->service = service;}
 
 bool Network::operator==(const Network& a) const{
-    return (stationA == a.getStationA() && stationB == a.getStationB() &&
-    capacity == a.getCapacity() && service == a.getService());
+    return (stationA == a.getStationA() && stationB == a.getStationB());
 }
 
 
